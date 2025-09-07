@@ -1,1 +1,4 @@
-
+holding/
+build/
+.vscode/
+*.exe
