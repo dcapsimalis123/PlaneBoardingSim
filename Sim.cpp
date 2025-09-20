@@ -6,60 +6,58 @@ Sim::Sim(int passengerCount){
     // define a functions for setting the pattern of where people are sitting, call that after the foor loop to set the x and y positions correctly
 
     for (int i = 0; i < passengerCount; i++){
-        xPos.push_back(-1); // position from the door to the right side of the plane
-        yPos.push_back(-1); // position from the door to the back of the plane
-                            // for both -1 indicates that the passenger is not on the plane yet
-        moveSpeed.push_back(1); // # of points moved per time increment
-        xSeatPos.push_back(0); // position of x seat
-        ySeatPos.push_back(3); // position of y seat
-        id.push_back(i);
-        seated.push_back(false);
+        passengerList[i] = Person(i,0,3);
+        // position from the door to the right side of the plane
+        // position from the door to the back of the plane
+        // for both -1 indicates that the passenger is not on the plane yet
+        // # of points moved per time increment
+        // position of x seat
+        // position of y seat
     }
 };
 
 void Sim::move(int person){
-    int* xPosTemp {&xPos[person]};
-    int* yPosTemp {&yPos[person]};
-    int* xSeatPosTemp {&xSeatPos[person]};
-    int* ySeatPosTemp {&ySeatPos[person]};
-    int* moveSpeedTemp {&moveSpeed[person]};
-
-
-    if ( *yPosTemp == 0){
-        if ( (*xPosTemp + *moveSpeedTemp) <= 3){
-            *xPosTemp += *moveSpeedTemp;
-        }else{
-            *xPosTemp = 3;
-            *yPosTemp += *moveSpeedTemp-(3-*xPosTemp);
+    Person* temp {&passengerList[person]};
+    if ( temp->yPos == 0){
+        if ( (temp->xPos + temp->moveSpeed) <= 3){
+            temp->xPos += temp->moveSpeed;
+        } else {
+            temp->xPos = 3;
+            temp->yPos += temp->moveSpeed-(3-temp->xPos);
         }
-    } else if ( *yPosTemp + *moveSpeedTemp >= *ySeatPosTemp){ // Reached aisle but not seat. FUTURE: impliment stop here for time alloted.
-        *xPosTemp  -= *moveSpeedTemp - (*ySeatPosTemp - *yPosTemp); 
-        *yPosTemp  = *ySeatPosTemp;
+    } else if ( temp->yPos + temp->moveSpeed >= temp->ySeatPos){ // Reached aisle but not seat. FUTURE: impliment stop here for time alloted.
+        temp->xPos -= temp->moveSpeed - (temp->ySeatPos - temp->yPos); 
+        temp->yPos = temp->ySeatPos;
     } else {
-        *yPosTemp += *moveSpeedTemp;
-    }    
-    if ( *yPosTemp == *ySeatPosTemp and *xPosTemp == *xSeatPosTemp)
+        temp->yPos += temp->moveSpeed;
+    } 
+
+    if ( temp->yPos == temp->ySeatPos and temp->xPos == temp->ySeatPos)
     {
-        seated[person] = true; // we don't want seated passengers to move
+        temp->seated = true; // we don't want seated passengers to move
     }
+
+    delete temp;
 }
 
 void Sim::step(){
+    int prsnCount{0};
 
-    for(int person = 0; person < nPsngr; person++){
-        // Movement definition
-        if (seated[person] != 1) { 
-            move(person);
+    while(prsnCount < nPsngr){
+        if (passengerList[prsnCount].seated == true) { 
+            move(prsnCount);
         }
-    }
-    if (nPsngr == 0 and (xPos[0] == -1 and yPos[0] == -1)){
-        xPos[0] = 0;
-        yPos[0] = 0;
-        nPsngr += 1;
-    } else if ( (xPos[nPsngr-1] != 0 or yPos[nPsngr-1] != 0) and nPsngr <= passengerCount ){
-        xPos[nPsngr]  =  0;
-        yPos[nPsngr]  =  0;
-        nPsngr       +=  1;
+        prsnCount++;
+    };
+
+    if (prsnCount == 0 and (passengerList[prsnCount].xPos == -1 and passengerList[prsnCount].yPos == -1)){
+        passengerList[prsnCount].xPos = 0;
+        passengerList[prsnCount].yPos = 0;
+        prsnCount += 1;
+    } else if ( (passengerList[prsnCount].xPos != 0 or passengerList[prsnCount].yPos != 0) and nPsngr <= passengerCount ){
+        passengerList[prsnCount].xPos = 0;
+        passengerList[prsnCount].yPos = 0;
+        prsnCount       +=  1;
     }
     /*
     move first moving passenger currently on plane 
@@ -71,7 +69,7 @@ void Sim::step(){
     if open, move newest passenger (position and values at -1,-1 and position nPsngrWaiting) to 0,0 and iterate nPsngr, if not skip
     end step
     */
-};
+}
 
 /*
 constructor

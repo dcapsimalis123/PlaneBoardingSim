@@ -3,41 +3,11 @@
 
 int main() {
     Sim primeSim(2);
-    primeSim.display_pos(0);
-    primeSim.display_pos(1);
-    primeSim.step();
-    primeSim.display_pos(0);
-    primeSim.display_pos(1);
-    primeSim.step();
-    primeSim.display_pos(0);
-    primeSim.display_pos(1);
-    primeSim.step();
-    primeSim.display_pos(0);
-    primeSim.display_pos(1);
-    primeSim.step();
-    primeSim.display_pos(0);
-    primeSim.display_pos(1);
-    primeSim.step();
-    primeSim.display_pos(0);
-    primeSim.display_pos(1);
-    primeSim.step();
-    primeSim.display_pos(0);
-    primeSim.display_pos(1);
-    primeSim.step();
-    primeSim.display_pos(0);
-    primeSim.display_pos(1);
-    primeSim.step();
-    primeSim.display_pos(0);
-    primeSim.display_pos(1);
-    primeSim.step();
-    primeSim.display_pos(0);
-    primeSim.display_pos(1);
-    primeSim.step();
-    primeSim.display_pos(0);
-    primeSim.display_pos(1);
-    primeSim.step();
-    primeSim.display_pos(0);
-    primeSim.display_pos(1);
+    for (int i = 0; i++; i < 12){
+        primeSim.display_pos(0);
+        primeSim.display_pos(1);
+        primeSim.step();
+    }
     return 0;
 }
 
