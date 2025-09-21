@@ -20,6 +20,6 @@ public:
     ~Person();
 
     //display
-    void display_pos(){std::cout  << '(' << xPos << ',' << yPos << ')' << std::endl;};
+    void display_pos()const{std::cout  << '(' << xPos << ',' << yPos << ')' << std::endl;};
 
 };

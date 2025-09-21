@@ -17,6 +17,7 @@ int main() {
 
 /*
 TODO:
+0. Impliment seperate "in the way" function that splits between x and y, have this inserted in the code where the logic block is for each. might be cumbersome given the direction differences present.
 1. Impliment sequencing for passengers
     a. Will want a general function call that reads a datastructure or sub function that sets the passengers in sequence
 2. Change displaying to terminal so that instead it writes it all to a log file
@@ -25,6 +26,7 @@ TODO:
 4. change up movements so that they allow more fractional movement and variation between passengers
 5. Make a python tool to read output of 2. to allow it to do analysis on various passengers to try and find root cause of slow downs and speed ups
 6. Far Off: Impliment a visualization for the passenger positions and allow for a cool animation
+7. Maybe have a swapable feature from move and move recursive, because I believe the recursive method would be slow than the standard method, if easier to work with and read.
 */
 
 /*
