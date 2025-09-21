@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cmath>
 #include "Sim.h"
 
 Sim::Sim(int passengerCount){
@@ -30,8 +31,9 @@ bool Sim::block_check(int person, std::string type_check){
             pPerson->yPos = passengerList[person-1].yPos - 1; // 1 being the assumed diameter of the ideal circular humans
         }
     } else if (type_check == "seatedAilse"){ // Check if anyone is in the way at the persons seat row
-        if (pPerson->xPos >= passengerList[person-1].xPos and passengerList[person].yPos == passengerList[person-1].yPos){ // check if anyone is infront of them for this movement
-            pPerson->xPos = passengerList[person-1].xPos - 1; // 1 being the assumed diameter of the ideal circular humans
+        float direction = std::signbit(3 - pPerson->xSeatPos) ? 1 : -1;         
+        if (pPerson->xPos * direction >= passengerList[person-1].xPos * direction and passengerList[person].yPos == passengerList[person-1].yPos){ // check if anyone is infront of them for this movement
+            pPerson->xPos = passengerList[person-1].xPos - 1 * direction; // 1 being the assumed diameter of the ideal circular humans
         }
     }
 

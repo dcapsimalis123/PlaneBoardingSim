@@ -3,7 +3,6 @@
 
 int main() {
     Sim primeSim(20);
-    std::cout << "What" << std::endl;
     for (int i = 0;  i < 12; i++){
         std::cout << "Time: " << i << std::endl;
         for (int j = 0; j < primeSim.lenPassengerList; j++){
