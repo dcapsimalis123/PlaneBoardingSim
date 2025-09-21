@@ -18,37 +18,53 @@ Sim::Sim(int passengerCount){
 };
 
 
-void Sim::move(int person, float moveSpeed){ // Recursive
+bool Sim::block_check(int person, std::string type_check){
+    bool output{false};
     Person* pPerson = &passengerList[person];
+    if (type_check == "initialBoard"){ // Check if anyone is in the way at the start of the plane
+        if (pPerson->xPos >= passengerList[person-1].xPos and passengerList[person-1].yPos == 0){ // check if anyone is infront of them for this movement
+            pPerson->xPos = passengerList[person-1].xPos - 1; // 1 being the assumed diameter of the ideal circular humans
+        }
+    } else if (type_check == "centerAilse"){ // Check if anyone is in the way walking down the center ailse of the plane
+        if (pPerson->yPos >= passengerList[person-1].yPos and passengerList[person-1].xPos == 3){ // check if anyone is infront of them for this movement
+            pPerson->yPos = passengerList[person-1].yPos - 1; // 1 being the assumed diameter of the ideal circular humans
+        }
+    } else if (type_check == "seatedAilse"){ // Check if anyone is in the way at the persons seat row
+        if (pPerson->xPos >= passengerList[person-1].xPos and passengerList[person].yPos == passengerList[person-1].yPos){ // check if anyone is infront of them for this movement
+            pPerson->xPos = passengerList[person-1].xPos - 1; // 1 being the assumed diameter of the ideal circular humans
+        }
+    }
+
+    return output;
+}
+
+
+void Sim::move(int person, float moveSpeed){
+    Person* pPerson = &passengerList[person];
+    float remainMS = pPerson->moveSpeed;
     if (pPerson->yPos == 0 and pPerson->xPos != 3){ // if in starting ailse and not at center of plane...
         pPerson->xPos += moveSpeed;
-        if (person > 0){ //check for people in front of them
-            if (pPerson->xPos >= passengerList[person-1].xPos and passengerList[person-1].yPos == 0){ // check if anyone is infront of them for this movement
-                pPerson->xPos = passengerList[person-1].xPos - 1; // 1 being the assumed diameter of the ideal circular humans
-            }
+        if (person > 0){
+            block_check(person, "initialBoard");
         } else if (pPerson->xPos >= 3){
-            float tempX   = pPerson->xPos - 3;
+            remainMS = 3 - pPerson->xPos -3;
             pPerson->xPos = 3;
-            move(person, tempX);
         }
-    } else if (pPerson->xPos == 3 and pPerson->yPos != pPerson->ySeatPos){ // move down center and go to seat row
+    }
+    if (pPerson->xPos == 3 and pPerson->yPos != pPerson->ySeatPos and remainMS > 0){ // move down center and go to seat row
         pPerson->yPos += moveSpeed;
         if (person > 0){ // check for people in front of them
-            if (pPerson->yPos >= passengerList[person-1].yPos and passengerList[person-1].xPos == 3){ // check if anyone is infront of them for this movement
-                pPerson->yPos = passengerList[person-1].yPos - 1; // 1 being the assumed diameter of the ideal circular humans
-            }
+            block_check(person,"centerAilse");
         } else if (pPerson->yPos >= pPerson->ySeatPos){
-            float tempY   = pPerson->yPos - pPerson->ySeatPos;
+            remainMS = pPerson->yPos - pPerson->ySeatPos;
             pPerson->yPos = pPerson->ySeatPos;
-            move(person, tempY);
         }
-    } else if (pPerson->yPos == pPerson->ySeatPos){
+    }
+    if (pPerson->yPos == pPerson->ySeatPos and remainMS > 0){
         int direction = (pPerson->xPos > pPerson->xSeatPos) ? -1 : 1;
         pPerson->xPos += direction*moveSpeed;
         if (person > 0){ // check for people in front of them
-            if (pPerson->xPos >= passengerList[person-1].xPos and passengerList[person].yPos == passengerList[person-1].yPos){ // check if anyone is infront of them for this movement
-                pPerson->xPos = passengerList[person-1].xPos - 1; // 1 being the assumed diameter of the ideal circular humans
-            }
+            block_check(person,"seatedAilse");
         }else if (pPerson->xPos == pPerson->xSeatPos){
             pPerson->seated = true;
         }
@@ -56,29 +72,6 @@ void Sim::move(int person, float moveSpeed){ // Recursive
     
 }
 
-void Sim::move(int person){
-    Person* temp {&passengerList[person]};
-    if ( temp->yPos == 0){ // Move across first aisle
-        if ( (temp->xPos + temp->moveSpeed) <= 3){
-            temp->xPos += temp->moveSpeed;
-        } else {
-            temp->xPos = 3;
-            temp->yPos += temp->moveSpeed-(3-temp->xPos);
-        }
-    } else if ( temp->yPos + temp->moveSpeed >= temp->ySeatPos){ // Reached aisle but not seat. FUTURE: impliment stop here for time alloted.
-        temp->xPos -= temp->moveSpeed - (temp->ySeatPos - temp->yPos); 
-        temp->yPos = temp->ySeatPos;
-    } else {
-        temp->yPos += temp->moveSpeed;
-    } 
-
-    if ( temp->yPos == temp->ySeatPos and temp->xPos == temp->ySeatPos)
-    {
-        temp->seated = true; // we don't want seated passengers to move
-    }
-
-    temp = nullptr;
-}
 
 void Sim::step(){
     int prsnCount{0};

@@ -10,6 +10,7 @@ private:
     std::vector<Person> passengerList;
     // void move(int person);
     void move(int person, float moveSpeed);
+    bool block_check(int person, std::string type_check);
 public:
     int lenPassengerList{0};
     Sim(int passengerCount);
