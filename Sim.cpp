@@ -6,7 +6,7 @@ Sim::Sim(int passengerCount){
     // define a functions for setting the pattern of where people are sitting, call that after the foor loop to set the x and y positions correctly
 
     for (int i = 0; i < passengerCount; i++){
-        passengerList.push_back(Person(i,0.0,3.0));
+        passengerList.push_back(Person(i,6.0,3.0));
         lenPassengerList += 1;
         // position from the door to the right side of the plane
         // position from the door to the back of the plane
@@ -43,20 +43,18 @@ void Sim::move(int person, float moveSpeed){ // Recursive
             move(person, tempY);
         }
     } else if (pPerson->yPos == pPerson->ySeatPos){
-        pPerson->xPos += moveSpeed; // insert after this line to check for people in front of them
+        int direction = (pPerson->xPos > pPerson->xSeatPos) ? -1 : 1;
+        pPerson->xPos += direction*moveSpeed; // insert after this line to check for people in front of them
         if (person > 0){
             if (pPerson->xPos >= passengerList[person-1].xPos and passengerList[person].yPos == passengerList[person-1].yPos){ // check if anyone is infront of them for this movement
                 pPerson->xPos = passengerList[person-1].xPos - 1; // 1 being the assumed diameter of the ideal circular humans
             }
-        }else if (pPerson->xPos >= pPerson->xSeatPos){
+        }else if (pPerson->xPos == pPerson->xSeatPos){
             pPerson->seated = true;
         }
     } // currently this sim doesn't handle interrupts. note that as of right now, if someone somehow goes past their seat the next time increment they will just hit their seat and will not care about the people around them. Potential flaw.
     
 }
-
-
-
 
 // void Sim::move(int person){
 //     Person* temp {&passengerList[person]};
@@ -93,13 +91,15 @@ void Sim::step(){
     };
     if (prsnCount == lenPassengerList){;} else { // if we have everyone on the plane already, skip this step
         if (prsnCount == 0 and (passengerList[prsnCount].xPos == -1 and passengerList[prsnCount].yPos == -1)){
-            passengerList[prsnCount].xPos = 0;
-            passengerList[prsnCount].yPos = 0;
-            nPsngr += 1;
-        } else if ( (passengerList[prsnCount].xPos != 0 or passengerList[prsnCount].yPos != 0) and nPsngr <= passengerCount ){
-            passengerList[prsnCount].xPos = 0;
-            passengerList[prsnCount].yPos = 0;
-            nPsngr       +=  1;
+                passengerList[prsnCount].xPos = 0;
+                passengerList[prsnCount].yPos = 0;
+                nPsngr += 1;
+        } else if (passengerList[prsnCount-1].xPos == -1){;} else{  // someone just boarded the plane and can't move forward, do not board another person on the plane, else ...
+            if ( (passengerList[prsnCount].xPos != 0 or passengerList[prsnCount].yPos != 0) and nPsngr <= lenPassengerList ){
+                passengerList[prsnCount].xPos = 0;
+                passengerList[prsnCount].yPos = 0;
+                nPsngr       +=  1;
+            }
         }
     }
     /*

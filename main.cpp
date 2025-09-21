@@ -2,14 +2,14 @@
 #include "Sim.h"
 
 int main() {
-    Sim primeSim(2);
+    Sim primeSim(20);
     std::cout << "What" << std::endl;
     for (int i = 0;  i < 12; i++){
         std::cout << "Time: " << i << std::endl;
-        std::cout << "Person " <<  "1" << " is at ";
-        primeSim.display_pos(0);
-        std::cout << "Person " <<  "2" << " is at ";
-        primeSim.display_pos(1);
+        for (int j = 0; j < primeSim.lenPassengerList; j++){
+            std::cout << "Person " << j+1 << " is at ";
+            primeSim.display_pos(j);
+        }
         primeSim.step();
     }
     return 0;
