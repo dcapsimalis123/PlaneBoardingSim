@@ -21,8 +21,8 @@ Sim::Sim(int passengerCount){
 void Sim::move(int person, float moveSpeed){ // Recursive
     Person* pPerson = &passengerList[person];
     if (pPerson->yPos == 0 and pPerson->xPos != 3){ // if in starting ailse and not at center of plane...
-        pPerson->xPos += moveSpeed; // insert after this line to check for people in front of them
-        if (person > 0){
+        pPerson->xPos += moveSpeed;
+        if (person > 0){ //check for people in front of them
             if (pPerson->xPos >= passengerList[person-1].xPos and passengerList[person-1].yPos == 0){ // check if anyone is infront of them for this movement
                 pPerson->xPos = passengerList[person-1].xPos - 1; // 1 being the assumed diameter of the ideal circular humans
             }
@@ -32,8 +32,8 @@ void Sim::move(int person, float moveSpeed){ // Recursive
             move(person, tempX);
         }
     } else if (pPerson->xPos == 3 and pPerson->yPos != pPerson->ySeatPos){ // move down center and go to seat row
-        pPerson->yPos += moveSpeed; // insert after this line to check for people in front of them
-        if (person > 0){
+        pPerson->yPos += moveSpeed;
+        if (person > 0){ // check for people in front of them
             if (pPerson->yPos >= passengerList[person-1].yPos and passengerList[person-1].xPos == 3){ // check if anyone is infront of them for this movement
                 pPerson->yPos = passengerList[person-1].yPos - 1; // 1 being the assumed diameter of the ideal circular humans
             }
@@ -44,8 +44,8 @@ void Sim::move(int person, float moveSpeed){ // Recursive
         }
     } else if (pPerson->yPos == pPerson->ySeatPos){
         int direction = (pPerson->xPos > pPerson->xSeatPos) ? -1 : 1;
-        pPerson->xPos += direction*moveSpeed; // insert after this line to check for people in front of them
-        if (person > 0){
+        pPerson->xPos += direction*moveSpeed;
+        if (person > 0){ // check for people in front of them
             if (pPerson->xPos >= passengerList[person-1].xPos and passengerList[person].yPos == passengerList[person-1].yPos){ // check if anyone is infront of them for this movement
                 pPerson->xPos = passengerList[person-1].xPos - 1; // 1 being the assumed diameter of the ideal circular humans
             }
@@ -56,29 +56,29 @@ void Sim::move(int person, float moveSpeed){ // Recursive
     
 }
 
-// void Sim::move(int person){
-//     Person* temp {&passengerList[person]};
-//     if ( temp->yPos == 0){ // Move across first aisle
-//         if ( (temp->xPos + temp->moveSpeed) <= 3){
-//             temp->xPos += temp->moveSpeed;
-//         } else {
-//             temp->xPos = 3;
-//             temp->yPos += temp->moveSpeed-(3-temp->xPos);
-//         }
-//     } else if ( temp->yPos + temp->moveSpeed >= temp->ySeatPos){ // Reached aisle but not seat. FUTURE: impliment stop here for time alloted.
-//         temp->xPos -= temp->moveSpeed - (temp->ySeatPos - temp->yPos); 
-//         temp->yPos = temp->ySeatPos;
-//     } else {
-//         temp->yPos += temp->moveSpeed;
-//     } 
+void Sim::move(int person){
+    Person* temp {&passengerList[person]};
+    if ( temp->yPos == 0){ // Move across first aisle
+        if ( (temp->xPos + temp->moveSpeed) <= 3){
+            temp->xPos += temp->moveSpeed;
+        } else {
+            temp->xPos = 3;
+            temp->yPos += temp->moveSpeed-(3-temp->xPos);
+        }
+    } else if ( temp->yPos + temp->moveSpeed >= temp->ySeatPos){ // Reached aisle but not seat. FUTURE: impliment stop here for time alloted.
+        temp->xPos -= temp->moveSpeed - (temp->ySeatPos - temp->yPos); 
+        temp->yPos = temp->ySeatPos;
+    } else {
+        temp->yPos += temp->moveSpeed;
+    } 
 
-//     if ( temp->yPos == temp->ySeatPos and temp->xPos == temp->ySeatPos)
-//     {
-//         temp->seated = true; // we don't want seated passengers to move
-//     }
+    if ( temp->yPos == temp->ySeatPos and temp->xPos == temp->ySeatPos)
+    {
+        temp->seated = true; // we don't want seated passengers to move
+    }
 
-//     temp = nullptr;
-// }
+    temp = nullptr;
+}
 
 void Sim::step(){
     int prsnCount{0};
