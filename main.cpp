@@ -16,6 +16,18 @@ int main() {
 }
 
 /*
+TODO:
+1. Impliment sequencing for passengers
+    a. Will want a general function call that reads a datastructure or sub function that sets the passengers in sequence
+2. Change displaying to terminal so that instead it writes it all to a log file
+3. Stopping for Baggage time, I am thinking adding some sort of timer to the passengers
+    a. so to have varying movement times, could do it instead as a count down from 10, and with varying speeds it deletes it until its zero, and once its zero, allow movement through baggage lane
+4. change up movements so that they allow more fractional movement and variation between passengers
+5. Make a python tool to read output of 2. to allow it to do analysis on various passengers to try and find root cause of slow downs and speed ups
+6. Far Off: Impliment a visualization for the passenger positions and allow for a cool animation
+*/
+
+/*
 PSUEDOCODE:
 set scenario type
 init Main Sim class
