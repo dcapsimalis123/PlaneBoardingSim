@@ -3,8 +3,12 @@
 
 int main() {
     Sim primeSim(2);
-    for (int i = 0; i++; i < 12){
+    std::cout << "What" << std::endl;
+    for (int i = 0;  i < 12; i++){
+        std::cout << "Time: " << i << std::endl;
+        std::cout << "Person " <<  "1" << " is at ";
         primeSim.display_pos(0);
+        std::cout << "Person " <<  "2" << " is at ";
         primeSim.display_pos(1);
         primeSim.step();
     }
