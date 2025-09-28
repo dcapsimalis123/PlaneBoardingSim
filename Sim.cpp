@@ -92,7 +92,7 @@ void Sim::step(){
                 passengerList[prsnCount].yPos = 0;
                 nPsngr += 1;
         } else if (passengerList[prsnCount-1].xPos == -1){;} else{  // someone just boarded the plane and can't move forward, do not board another person on the plane, else ...
-            if ( (passengerList[prsnCount].xPos != 0 or passengerList[prsnCount].yPos != 0) and nPsngr <= lenPassengerList ){
+            if ( (passengerList[prsnCount-1].xPos != 0 or passengerList[prsnCount-1].yPos != 0) and nPsngr <= lenPassengerList ){
                 passengerList[prsnCount].xPos = 0;
                 passengerList[prsnCount].yPos = 0;
                 nPsngr += 1;
