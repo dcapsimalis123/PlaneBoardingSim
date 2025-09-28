@@ -18,26 +18,28 @@ Sim::Sim(int passengerCount){
     }
 };
 
-
-bool Sim::block_check(int person, std::string type_check){
-    bool output{false};
-    Person* pPerson = &passengerList[person];
-    if (type_check == "initialBoard"){ // Check if anyone is in the way at the start of the plane
-        if (pPerson->xPos >= passengerList[person-1].xPos and passengerList[person-1].yPos == 0){ // check if anyone is infront of them for this movement
-            pPerson->xPos = passengerList[person-1].xPos - 1; // 1 being the assumed diameter of the ideal circular humans
-        }
-    } else if (type_check == "centerAilse"){ // Check if anyone is in the way walking down the center ailse of the plane
-        if (pPerson->yPos >= passengerList[person-1].yPos and passengerList[person-1].xPos == 3){ // check if anyone is infront of them for this movement
-            pPerson->yPos = passengerList[person-1].yPos - 1; // 1 being the assumed diameter of the ideal circular humans
-        }
-    } else if (type_check == "seatedAilse"){ // Check if anyone is in the way at the persons seat row
-        float direction = std::signbit(3 - pPerson->xSeatPos) ? 1 : -1;         
-        if (pPerson->xPos * direction >= passengerList[person-1].xPos * direction and passengerList[person].yPos == passengerList[person-1].yPos){ // check if anyone is infront of them for this movement
-            pPerson->xPos = passengerList[person-1].xPos - 1 * direction; // 1 being the assumed diameter of the ideal circular humans
+void Sim::block_check(int person, blockType type_check){
+    if (person == 0){;} else { // Prevent out-of-bounds
+        Person* pPerson = &passengerList[person];
+        switch (type_check){
+            case blockType::initialBoard: // Check if anyone is in the way at the start of the plane
+                if (pPerson->xPos >= passengerList[person-1].xPos and passengerList[person-1].yPos == 0){ // check if anyone is infront of them for this movement
+                    pPerson->xPos = passengerList[person-1].xPos - 1; // 1 being the assumed diameter of the ideal circular humans
+                }
+                break;
+            case blockType::centerAisle: // Check if anyone is in the way walking down the center ailse of the plane
+                if (pPerson->yPos >= passengerList[person-1].yPos and passengerList[person-1].xPos == 3){ // check if anyone is infront of them for this movement
+                    pPerson->yPos = passengerList[person-1].yPos - 1; // 1 being the assumed diameter of the ideal circular humans
+                }
+                break;
+            case blockType::seatedAisle: // Check if anyone is in the way at the persons seat row
+                float direction = std::signbit(3 - pPerson->xSeatPos) ? 1 : -1;         
+                if (pPerson->xPos * direction >= passengerList[person-1].xPos * direction and passengerList[person].yPos == passengerList[person-1].yPos){ // check if anyone is infront of them for this movement
+                    pPerson->xPos = passengerList[person-1].xPos - 1 * direction; // 1 being the assumed diameter of the ideal circular humans
+                }
+                break;
         }
     }
-
-    return output;
 }
 
 
@@ -47,7 +49,7 @@ void Sim::move(int person, float moveSpeed){
     if (pPerson->yPos == 0 and pPerson->xPos != 3){ // if in starting ailse and not at center of plane...
         pPerson->xPos += moveSpeed;
         if (person > 0){
-            block_check(person, "initialBoard");
+            block_check(person, blockType::initialBoard);
         } else if (pPerson->xPos >= 3){
             remainMS = 3 - pPerson->xPos -3;
             pPerson->xPos = 3;
@@ -56,7 +58,7 @@ void Sim::move(int person, float moveSpeed){
     if (pPerson->xPos == 3 and pPerson->yPos != pPerson->ySeatPos and remainMS > 0){ // move down center and go to seat row
         pPerson->yPos += moveSpeed;
         if (person > 0){ // check for people in front of them
-            block_check(person,"centerAilse");
+            block_check(person, blockType::centerAisle);
         } else if (pPerson->yPos >= pPerson->ySeatPos){
             remainMS = pPerson->yPos - pPerson->ySeatPos;
             pPerson->yPos = pPerson->ySeatPos;
@@ -66,7 +68,7 @@ void Sim::move(int person, float moveSpeed){
         int direction = (pPerson->xPos > pPerson->xSeatPos) ? -1 : 1;
         pPerson->xPos += direction*moveSpeed;
         if (person > 0){ // check for people in front of them
-            block_check(person,"seatedAilse");
+            block_check(person, blockType::seatedAisle);
         }else if (pPerson->xPos == pPerson->xSeatPos){
             pPerson->seated = true;
         }
@@ -93,7 +95,7 @@ void Sim::step(){
             if ( (passengerList[prsnCount].xPos != 0 or passengerList[prsnCount].yPos != 0) and nPsngr <= lenPassengerList ){
                 passengerList[prsnCount].xPos = 0;
                 passengerList[prsnCount].yPos = 0;
-                nPsngr       +=  1;
+                nPsngr += 1;
             }
         }
     }
@@ -108,9 +110,3 @@ void Sim::step(){
     end step
     */
 }
-
-/*
-constructor
-destructor
-
-*/
