@@ -21,5 +21,6 @@ public:
 
     //display
     void display_pos()const{std::cout  << '(' << xPos << ',' << yPos << ')' << std::endl;};
+    void display_seatPos()const{std::cout  << '(' << xSeatPos << ',' << ySeatPos << ')' << std::endl;};
 
 };

@@ -1,13 +1,15 @@
 #include <iostream>
 #include <cmath>
 #include "Sim.h"
+#include "init_types.h"
 
 Sim::Sim(int passengerCount){
     int baggage_placement_speed = 1;
     // define a functions for setting the pattern of where people are sitting, call that after the foor loop to set the x and y positions correctly
 
     for (int i = 0; i < passengerCount; i++){
-        passengerList.push_back(Person(i,6.0,3.0));
+        seat_pos tempSeatPos = fullColumn(i,8); 
+        passengerList.push_back(Person(i,tempSeatPos.xSeatPos,tempSeatPos.ySeatPos));
         lenPassengerList += 1;
         // position from the door to the right side of the plane
         // position from the door to the back of the plane
@@ -109,4 +111,10 @@ void Sim::step(){
     if open, move newest passenger (position and values at -1,-1 and position nPsngrWaiting) to 0,0 and iterate nPsngr, if not skip
     end step
     */
+}
+
+void Sim::display_seatPoses(){
+    for (int i = 0; i < lenPassengerList; i++){
+        passengerList[i].display_seatPos();
+    }
 }

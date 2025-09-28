@@ -2,6 +2,7 @@
 #include <vector>
 #include "Person.h"
 
+
 class Sim {
 private:
 
@@ -18,5 +19,6 @@ public:
     Sim(int passengerCount);
     int  display_id(int psngCount){return passengerList[psngCount].id;};
     void display_pos(int psngCount){passengerList[psngCount].display_pos();};
+    void display_seatPoses();
     void step();    
 };
