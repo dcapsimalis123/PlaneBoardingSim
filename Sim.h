@@ -11,7 +11,7 @@ private:
     bool simEnd = false;
     std::vector<Person> passengerList;
     // void move(int person);
-    void move(int person, float moveSpeed);
+    void move(int person);
     enum class blockType { initialBoard, centerAisle, seatedAisle };
 public:
     void block_check(int person, blockType type_check);

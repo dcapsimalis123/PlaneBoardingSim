@@ -8,7 +8,7 @@ Sim::Sim(int passengerCount){
     // define a functions for setting the pattern of where people are sitting, call that after the foor loop to set the x and y positions correctly
 
     for (int i = 0; i < passengerCount; i++){
-        seat_pos tempSeatPos = fullColumn(i,8); 
+        seat_pos tempSeatPos = fullColumn(i,8);
         passengerList.push_back(Person(i,tempSeatPos.xSeatPos,tempSeatPos.ySeatPos));
         lenPassengerList += 1;
         // position from the door to the right side of the plane
@@ -45,34 +45,42 @@ void Sim::block_check(int person, blockType type_check){
 }
 
 
-void Sim::move(int person, float moveSpeed){
+void Sim::move(int person){
     Person* pPerson = &passengerList[person];
     float remainMS = pPerson->moveSpeed;
     if (pPerson->yPos == 0 and pPerson->xPos != 3){ // if in starting ailse and not at center of plane...
-        pPerson->xPos += moveSpeed;
+        pPerson->xPos += remainMS;
         if (person > 0){
             block_check(person, blockType::initialBoard);
         } else if (pPerson->xPos >= 3){
-            remainMS = 3 - pPerson->xPos -3;
+            remainMS = 3 - pPerson->xPos - 3;
             pPerson->xPos = 3;
+        } else {
+            remainMS = 0;
         }
     }
     if (pPerson->xPos == 3 and pPerson->yPos != pPerson->ySeatPos and remainMS > 0){ // move down center and go to seat row
-        pPerson->yPos += moveSpeed;
+        pPerson->yPos += remainMS;
         if (person > 0){ // check for people in front of them
             block_check(person, blockType::centerAisle);
-        } else if (pPerson->yPos >= pPerson->ySeatPos){
+        }
+        if (pPerson->yPos >= pPerson->ySeatPos){
             remainMS = pPerson->yPos - pPerson->ySeatPos;
             pPerson->yPos = pPerson->ySeatPos;
+        } else {
+            remainMS = 0;
         }
     }
     if (pPerson->yPos == pPerson->ySeatPos and remainMS > 0){
         int direction = (pPerson->xPos > pPerson->xSeatPos) ? -1 : 1;
-        pPerson->xPos += direction*moveSpeed;
+        pPerson->xPos += direction*remainMS;
         if (person > 0){ // check for people in front of them
             block_check(person, blockType::seatedAisle);
-        }else if (pPerson->xPos == pPerson->xSeatPos){
+        }
+        if (pPerson->xPos == pPerson->xSeatPos){
             pPerson->seated = true;
+        } else {
+            remainMS = 0;
         }
     } // currently this sim doesn't handle interrupts. note that as of right now, if someone somehow goes past their seat the next time increment they will just hit their seat and will not care about the people around them. Potential flaw.
     
@@ -84,7 +92,7 @@ void Sim::step(){
 
     while(prsnCount < nPsngr){
         if (passengerList[prsnCount].xPos != -1 and passengerList[prsnCount].seated != true) { 
-            move(prsnCount, passengerList[prsnCount].moveSpeed);
+            move(prsnCount);
         }
         prsnCount++;
     };

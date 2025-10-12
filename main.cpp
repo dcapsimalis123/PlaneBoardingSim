@@ -2,17 +2,17 @@
 #include "Sim.h"
 
 int main() {
-    Sim primeSim(48);
+    Sim primeSim(16);
     primeSim.display_seatPoses();
     
-    // for (int i = 0;  i < 12; i++){
-    //     std::cout << "Time: " << i << std::endl;
-    //     for (int j = 0; j < primeSim.lenPassengerList; j++){
-    //         std::cout << "Person " << j+1 << " is at ";
-    //         primeSim.display_pos(j);
-    //     }
-    //     primeSim.step();
-    // }
+    for (int i = 0;  i < 50; i++){
+        std::cout << "Time: " << i << std::endl;
+        for (int j = 0; j < primeSim.lenPassengerList; j++){
+            std::cout << "Person " << j+1 << " is at ";
+            primeSim.display_pos(j);
+        }
+        primeSim.step();
+    }
     return 0;
 }
 
