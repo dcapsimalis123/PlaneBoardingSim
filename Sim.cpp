@@ -166,7 +166,7 @@ void Sim::start_log_file(){
 
 void Sim::update_log_file(){
     for (int i =0 ; i < lenPassengerList; i++ ){
-        outputCSV << passengerList[i].posVec[0] << "," << passengerList[i].posVec[0] << ",";
+        outputCSV << passengerList[i].posVec[0] << "," << passengerList[i].posVec[1] << ",";
     }
     outputCSV << std::endl;
 }
