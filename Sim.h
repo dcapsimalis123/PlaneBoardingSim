@@ -1,6 +1,8 @@
 #include <iostream>
 #include <vector>
+#include <fstream>
 #include "Person.h"
+
 
 
 class Sim {
@@ -12,6 +14,7 @@ private:
     std::vector<Person> passengerList;
     int  move(int person);
     int  step();
+    std::ofstream outputCSV;
 public:
     // Constructor
     Sim(int passengerCount);
@@ -29,5 +32,6 @@ public:
 
     void start_log_file();
     void update_log_file();
+    void close_log_file();
     void display_time(int iteratorStep);
 };

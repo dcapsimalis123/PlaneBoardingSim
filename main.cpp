@@ -6,6 +6,7 @@ int main() {
     primeSim.display_seatPoses();
     
     primeSim.run_sim(100,2,0);
+    primeSim.close_log_file();
     return 0;
 }
 

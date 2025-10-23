@@ -151,7 +151,6 @@ void Sim::display_seatPoses(){
 
 
 void Sim::start_log_file(){
-    std::ofstream outputCSV;
     outputCSV.open("output.csv");
     outputCSV << "First Line" << std::endl;
     
@@ -159,17 +158,28 @@ void Sim::start_log_file(){
         outputCSV << i << ", , ";
     }
     outputCSV << std::endl;
-    outputCSV.close();
-};
+    for (int i =0 ; i < lenPassengerList; i++ ){
+        outputCSV << "x, y, ";
+    }
+    outputCSV << std::endl;
+}
 
 void Sim::update_log_file(){
+    for (int i =0 ; i < lenPassengerList; i++ ){
+        outputCSV << passengerList[i].posVec[0] << "," << passengerList[i].posVec[0] << ",";
+    }
+    outputCSV << std::endl;
+}
 
-};
+void Sim::close_log_file(){
+    outputCSV.close();
+}
 
 int Sim::run_sim(int numSteps, int numPassengers, int initPassengerType){
     for (int i{0}; i < numSteps; i++){
         if (debugMode){ display_time(i); }
         step();
+        update_log_file();
     }
     return 0;
 };
