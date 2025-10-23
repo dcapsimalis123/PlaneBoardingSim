@@ -25,24 +25,24 @@ Sim::Sim(int passengerCount){
 };
 
 
-int block_check(std::vector <Person> passengerList, int person, blockType type_check){
+int block_check(std::vector<Person>& passengerList, int person, blockType type_check){
     if (person == 0){return 0;} // Prevent out-of-bounds
     Person* pPerson = &passengerList[person];
     switch (type_check){
         case blockType::initialBoard: // Check if anyone is in the way at the start of the plane
-            if (pPerson->posVec[0] >= passengerList[person-1].posVec[0] and passengerList[person-1].posVec[1] == 0){ // check if anyone is infront of them for this movement
-                pPerson->posVec[0] = passengerList[person-1].posVec[0] - 1; // 1 being the assumed diameter of the ideal circular humans
+            if (pPerson->positionVector[0] >= passengerList[person-1].positionVector[0] and passengerList[person-1].positionVector[1] == 0){ // check if anyone is infront of them for this movement
+                pPerson->positionVector[0] = passengerList[person-1].positionVector[0] - 1; // 1 being the assumed diameter of the ideal circular humans
             }
             break;
         case blockType::centerAisle: // Check if anyone is in the way walking down the center ailse of the plane
-            if (pPerson->posVec[1] >= passengerList[person-1].posVec[1] and passengerList[person-1].posVec[1] == 3){ // check if anyone is infront of them for this movement
-                pPerson->posVec[1] = passengerList[person-1].posVec[1] - 1; // 1 being the assumed diameter of the ideal circular humans
+            if (pPerson->positionVector[1] >= passengerList[person-1].positionVector[1] and passengerList[person-1].positionVector[1] == 3){ // check if anyone is infront of them for this movement
+                pPerson->positionVector[1] = passengerList[person-1].positionVector[1] - 1; // 1 being the assumed diameter of the ideal circular humans
             }
             break;
         case blockType::seatedAisle: // Check if anyone is in the way at the persons seat row
             float direction = std::signbit(3 - pPerson->xSeatPos) ? 1 : -1;         
-            if (pPerson->posVec[0] * direction >= passengerList[person-1].posVec[0] * direction and passengerList[person].posVec[1] == passengerList[person-1].posVec[1] and not passengerList[person-1].seated){ // check if anyone is infront of them for this movement
-                pPerson->posVec[0] = passengerList[person-1].posVec[0] - 1 * direction; // 1 being the assumed diameter of the ideal circular humans
+            if (pPerson->positionVector[0] * direction >= passengerList[person-1].positionVector[0] * direction and passengerList[person].positionVector[1] == passengerList[person-1].positionVector[1] and not passengerList[person-1].seated){ // check if anyone is infront of them for this movement
+                pPerson->positionVector[0] = passengerList[person-1].positionVector[0] - 1 * direction; // 1 being the assumed diameter of the ideal circular humans
             }
             break;
     }
@@ -50,35 +50,35 @@ int block_check(std::vector <Person> passengerList, int person, blockType type_c
 };
 
 
-int passed_point_check(Person* pPerson, float* remainMs, std::vector <int> direction, blockType stage){
+int passed_point_check(Person* pPerson, float* remainMs, std::vector<int>& direction, blockType stage){
     switch (stage){
         case blockType::initialBoard:
-            if (pPerson->posVec[0] <= 3 ){*remainMs = 0.0; break;}
-            *remainMs =  pPerson->posVec[0] - 3;
-            pPerson->posVec[0] = 3;
+            if (pPerson->positionVector[0] <= 3 ){*remainMs = 0.0; break;}
+            *remainMs =  pPerson->positionVector[0] - 3;
+            pPerson->positionVector[0] = 3;
             break;
         case blockType::centerAisle:
-            if (pPerson->posVec[1] <= pPerson->ySeatPos ){*remainMs = 0.0; break;}
-            *remainMs = pPerson->posVec[1] - pPerson->ySeatPos;
-            pPerson->posVec[1] = pPerson->ySeatPos;
+            if (pPerson->positionVector[1] <= pPerson->ySeatPos ){*remainMs = 0.0; break;}
+            *remainMs = pPerson->positionVector[1] - pPerson->ySeatPos;
+            pPerson->positionVector[1] = pPerson->ySeatPos;
             break;
         case blockType::seatedAisle:
-            if (pPerson->posVec[0] * direction[0] <= pPerson->xSeatPos ){*remainMs = 0.0; return 0;}
-            *remainMs = pPerson->posVec[0] - pPerson->ySeatPos;
-            pPerson->posVec[0] = pPerson->ySeatPos;
+            if (pPerson->positionVector[0] * direction[0] <= pPerson->xSeatPos ){*remainMs = 0.0; return 0;}
+            *remainMs = pPerson->positionVector[0] - pPerson->xSeatPos;
+            pPerson->positionVector[0] = pPerson->ySeatPos;
             break;
     }
     return 0;
 };
 
 
-float actually_move(Person* pPerson, float* remainMs, std::vector<int> direction , int iterator, blockType stage, std::vector <Person> passengerList){
+float actually_move(Person* pPerson, float* remainMs, std::vector<int>& direction , int iterator, blockType stage, std::vector<Person>& passengerList){
     if (pPerson->seated){
         *remainMs = 0.0;
         return *remainMs;
     }
-    pPerson->posVec[0] += direction[0] * *remainMs;
-    pPerson->posVec[1] += direction[1] * *remainMs;
+    pPerson->positionVector[0] += direction[0] * *remainMs;
+    pPerson->positionVector[1] += direction[1] * *remainMs;
     if (iterator > 0){ // check for people in front of them
         block_check(passengerList, iterator, stage);
     }
@@ -90,21 +90,21 @@ float actually_move(Person* pPerson, float* remainMs, std::vector<int> direction
 
 int Sim::move(int person){
     Person* pPerson = &passengerList[person];
-    std::vector <int> direction = {0, 0};
+    std::vector<int> direction = {0, 0};
     float remainMs = pPerson->moveSpeed;
     float* pRemainMS = &remainMs;
-    if (pPerson->posVec[1] == 0 and pPerson->posVec[0] != 3){ // if in starting ailse and not at center of plane...
+    if (pPerson->positionVector[1] == 0 and pPerson->positionVector[0] != 3){ // if in starting ailse and not at center of plane...
         direction[0] = 1;
         direction[1] = 0;
         remainMs = actually_move(pPerson, pRemainMS, direction, person, blockType::initialBoard, passengerList);
     }
-    if (pPerson->posVec[0] == 3 and pPerson->posVec[1] != pPerson->ySeatPos and remainMs > 0){ // move down center and go to seat row
+    if (pPerson->positionVector[0] == 3 and pPerson->positionVector[1] != pPerson->ySeatPos and remainMs > 0){ // move down center and go to seat row
         direction[0] = 0;
         direction[1] = 1;
         remainMs = actually_move(pPerson, pRemainMS, direction, person, blockType::centerAisle, passengerList);
     }
-    if (pPerson->posVec[1] == pPerson->ySeatPos and remainMs > 0){
-        direction[0] = (pPerson->posVec[0] > pPerson->xSeatPos) ? -1 : 1;
+    if (pPerson->positionVector[1] == pPerson->ySeatPos and remainMs > 0){
+        direction[0] = (pPerson->positionVector[0] > pPerson->xSeatPos) ? -1 : 1;
         direction[1] = 0;
         remainMs = actually_move(pPerson, pRemainMS, direction, person, blockType::seatedAisle, passengerList);
     } 
@@ -117,7 +117,7 @@ int Sim::move(int person){
 int Sim::step(){
     int prsnCount{0};
     while(prsnCount < nPsngr){
-        if (passengerList[prsnCount].posVec[0] != -1 and passengerList[prsnCount].seated != true) { 
+        if (passengerList[prsnCount].positionVector[0] != -1 and passengerList[prsnCount].seated != true) { 
             move(prsnCount);
         }
         prsnCount++;
@@ -125,18 +125,18 @@ int Sim::step(){
 
     // Skip Conditions
     if ( prsnCount == 0){ }  // 1: we have everyone on the plane already
-    else if (prsnCount == lenPassengerList ||passengerList[prsnCount-1].posVec[0] == -1){return 0;} // 2: someone just boarded the plane and can't move forward, do not board another person on the plane
+    else if (prsnCount == lenPassengerList ||passengerList[prsnCount-1].positionVector[0] == -1){return 0;} // 2: someone just boarded the plane and can't move forward, do not board another person on the plane
                                                                                           
                                                                                            
 
-    if (prsnCount == 0 and (passengerList[prsnCount].posVec[0] == -1 and passengerList[prsnCount].posVec[1] == -1)){
-        passengerList[prsnCount].posVec[0] = 0; 
-        passengerList[prsnCount].posVec[1] = 0;
+    if (prsnCount == 0 and (passengerList[prsnCount].positionVector[0] == -1 and passengerList[prsnCount].positionVector[1] == -1)){
+        passengerList[prsnCount].positionVector[0] = 0; 
+        passengerList[prsnCount].positionVector[1] = 0;
         nPsngr += 1;
         return 0;
-    } else if ( (passengerList[prsnCount-1].posVec[0] != 0 or passengerList[prsnCount-1].posVec[1] != 0) and nPsngr <= lenPassengerList ){
-        passengerList[prsnCount].posVec[0] = 0;
-        passengerList[prsnCount].posVec[1] = 0;
+    } else if ( (passengerList[prsnCount-1].positionVector[0] != 0 or passengerList[prsnCount-1].positionVector[1] != 0) and nPsngr <= lenPassengerList ){
+        passengerList[prsnCount].positionVector[0] = 0;
+        passengerList[prsnCount].positionVector[1] = 0;
         nPsngr += 1;
         return 0;
     }
@@ -166,7 +166,7 @@ void Sim::start_log_file(){
 
 void Sim::update_log_file(){
     for (int i =0 ; i < lenPassengerList; i++ ){
-        outputCSV << passengerList[i].posVec[0] << "," << passengerList[i].posVec[1] << ",";
+        outputCSV << passengerList[i].positionVector[0] << "," << passengerList[i].positionVector[1] << ",";
     }
     outputCSV << std::endl;
 }

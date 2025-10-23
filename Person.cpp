@@ -4,7 +4,7 @@
 
 Person::Person(int tId, float txSeatPos, float tySeatPos){
     moveSpeed = 1.0;
-    posVec = {-1.0, -1.0};
+    positionVector = {-1.0, -1.0};
     xSeatPos = txSeatPos;
     ySeatPos = tySeatPos;
     id = tId;

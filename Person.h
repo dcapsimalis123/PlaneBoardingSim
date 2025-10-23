@@ -6,7 +6,7 @@ class Person
 private:
 
 public:
-    std::vector <float> posVec;
+    std::vector<float> positionVector;
     float moveSpeed;
     float xSeatPos;
     float ySeatPos;
@@ -19,10 +19,10 @@ public:
     ~Person();
 
     //display
-    void display_pos(){std::cout  << '(' << posVec[0] << ',' << posVec[1] << ')' << std::endl;};
+    void display_pos(){std::cout  << '(' << positionVector[0] << ',' << positionVector[1] << ')' << std::endl;};
     void display_seatPos(){std::cout  << '(' << xSeatPos << ',' << ySeatPos << ')' << std::endl;};
     
     // setter 
-    void seated_check(){if(posVec[0] == xSeatPos and posVec[1] == ySeatPos){seated = true;}}
+    void seated_check(){if(positionVector[0] == xSeatPos and positionVector[1] == ySeatPos){seated = true;}}
 
 };
