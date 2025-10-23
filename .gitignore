@@ -2,3 +2,5 @@ holding/
 build/
 .vscode/
 *.exe
+*.log
+*.csv
