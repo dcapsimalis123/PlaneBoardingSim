@@ -8,7 +8,7 @@
 class Sim {
 private:
     int passengerCount{1};
-    int nPsngr{0};
+    int passengersBoarding{0}; // This is technically the amount on the plane, but this wording is more pithy
     bool simEnd = false;
     bool debugMode = true;
     std::vector<Person> passengerList;

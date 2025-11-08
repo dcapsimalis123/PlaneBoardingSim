@@ -2,7 +2,7 @@
 #include "Sim.h"
 
 int main() {
-    Sim primeSim(48);
+    Sim primeSim(2);
     primeSim.display_seatPoses();
     
     primeSim.run_sim(100,2,0);

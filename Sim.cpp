@@ -35,7 +35,7 @@ int block_check(std::vector<Person>& passengerList, int person, blockType type_c
             }
             break;
         case blockType::centerAisle: // Check if anyone is in the way walking down the center ailse of the plane
-            if (pPerson->positionVector[1] >= passengerList[person-1].positionVector[1] and passengerList[person-1].positionVector[1] == 3){ // check if anyone is infront of them for this movement
+            if (pPerson->positionVector[1] >= passengerList[person-1].positionVector[1] and passengerList[person-1].positionVector[0] == 3){ // check if anyone is infront of them for this movement
                 pPerson->positionVector[1] = passengerList[person-1].positionVector[1] - 1; // 1 being the assumed diameter of the ideal circular humans
             }
             break;
@@ -106,6 +106,10 @@ int Sim::move(int person){
     if (pPerson->positionVector[1] == pPerson->ySeatPos and remainMs > 0){
         direction[0] = (pPerson->positionVector[0] > pPerson->xSeatPos) ? -1 : 1;
         direction[1] = 0;
+        if (pPerson->baggageCompletion < 1.0){
+            float* tempRemainMs = &remainMs;
+            pPerson->baggage_placement_step(tempRemainMs);
+        }
         remainMs = actually_move(pPerson, pRemainMS, direction, person, blockType::seatedAisle, passengerList);
     } 
     return 0;
@@ -115,29 +119,27 @@ int Sim::move(int person){
 
 
 int Sim::step(){
-    int prsnCount{0};
-    while(prsnCount < nPsngr){
-        if (passengerList[prsnCount].positionVector[0] != -1 and passengerList[prsnCount].seated != true) { 
-            move(prsnCount);
+    int personIterator{0};
+    while(personIterator < passengersBoarding){
+        if (passengerList[personIterator].positionVector[0] != -1 and passengerList[personIterator].seated != true) { 
+            move(personIterator);
         }
-        prsnCount++;
+        personIterator++;
     };
 
     // Skip Conditions
-    if ( prsnCount == 0){ }  // 1: we have everyone on the plane already
-    else if (prsnCount == lenPassengerList ||passengerList[prsnCount-1].positionVector[0] == -1){return 0;} // 2: someone just boarded the plane and can't move forward, do not board another person on the plane
-                                                                                          
-                                                                                           
+    if ( personIterator == 0){ }  // 1: we have everyone on the plane already
+    else if (personIterator == lenPassengerList ||passengerList[personIterator-1].positionVector[0] == -1){return 0;} // 2: someone just boarded the plane and can't move forward, do not board another person on the plane
 
-    if (prsnCount == 0 and (passengerList[prsnCount].positionVector[0] == -1 and passengerList[prsnCount].positionVector[1] == -1)){
-        passengerList[prsnCount].positionVector[0] = 0; 
-        passengerList[prsnCount].positionVector[1] = 0;
-        nPsngr += 1;
+    if (personIterator == 0 and (passengerList[personIterator].positionVector[0] == -1 and passengerList[personIterator].positionVector[1] == -1)){
+        passengerList[personIterator].positionVector[0] = 0; 
+        passengerList[personIterator].positionVector[1] = 0;
+        passengersBoarding += 1;
         return 0;
-    } else if ( (passengerList[prsnCount-1].positionVector[0] != 0 or passengerList[prsnCount-1].positionVector[1] != 0) and nPsngr <= lenPassengerList ){
-        passengerList[prsnCount].positionVector[0] = 0;
-        passengerList[prsnCount].positionVector[1] = 0;
-        nPsngr += 1;
+    } else if ( (passengerList[personIterator-1].positionVector[0] != 0 or passengerList[personIterator-1].positionVector[1] != 0) and passengersBoarding <= lenPassengerList ){
+        passengerList[personIterator].positionVector[0] = 0;
+        passengerList[personIterator].positionVector[1] = 0;
+        passengersBoarding += 1;
         return 0;
     }
     return 0;
