@@ -1,4 +1,5 @@
 #include <iostream>
+#include "Globals.h"
 
 /*
 GOAL:
@@ -12,5 +13,5 @@ struct seat_pos{
     float ySeatPos;
 };
 
-seat_pos fullColumn(int person, int planeLength); 
-seat_pos spacedColumn(int person, int planeLength);
+seat_pos fullColumn(int person,   int planeLength, Global::Globals* globalValues); 
+seat_pos spacedColumn(int person, int planeLength, Global::Globals* globalValues);

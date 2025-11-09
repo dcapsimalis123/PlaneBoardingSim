@@ -2,6 +2,7 @@
 #include <vector>
 #include <fstream>
 #include "Person.h"
+#include "Globals.h"
 
 
 
@@ -12,12 +13,13 @@ private:
     bool simEnd = false;
     bool debugMode = true;
     std::vector<Person> passengerList;
-    int  move(int person);
-    int  step();
+    int  move(int person, Global::Globals* globalValues);
+    int  step(Global::Globals* globalValues);
     std::ofstream outputCSV;
 public:
     // Constructor
-    Sim(int passengerCount);
+    Sim(int passengerCount, Global::Globals* globalValues, int planeLength, int planeWidth, int planeMidPoint);
+    Sim(int passengerCount, Global::Globals* globalValues, int planeLength, int planeWidth);
 
     // Destructor
 
@@ -25,7 +27,7 @@ public:
     int  lenPassengerList{0};
 
     // regular functions
-    int  run_sim(int numSteps, int numPassengers, int initPassengerType);
+    int  run_sim(int numSteps, int numPassengers, int initPassengerType, Global::Globals* globalValues);
     int  display_id(int psngCount){return passengerList[psngCount].id;};
     void display_pos(int psngCount){passengerList[psngCount].display_pos();};
     void display_seatPoses();

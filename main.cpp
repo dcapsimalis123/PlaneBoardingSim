@@ -1,11 +1,14 @@
 #include <iostream>
 #include "Sim.h"
+#include "Globals.h"
+
 
 int main() {
-    Sim primeSim(2);
+    Global::Globals globalValues;
+    Sim primeSim(2, &globalValues, 2, 2, 1);
     primeSim.display_seatPoses();
     
-    primeSim.run_sim(100,2,0);
+    primeSim.run_sim(10,2,0, &globalValues);
     primeSim.close_log_file();
     return 0;
 }

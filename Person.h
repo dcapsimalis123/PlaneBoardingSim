@@ -28,6 +28,6 @@ public:
     void display_seatPos(){std::cout  << '(' << xSeatPos << ',' << ySeatPos << ')' << std::endl;};
     
     // setter 
-    void seated_check(){if(positionVector[0] == xSeatPos and positionVector[1] == ySeatPos){seated = true;}}
+    void seated_check(){if(positionVector[0] == xSeatPos && positionVector[1] == ySeatPos){seated = true;}}
 
 };
