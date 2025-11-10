@@ -24,6 +24,13 @@ TODO:
     a. so to have varying movement times, could do it instead as a count down from 10, and with varying speeds it deletes it until its zero, and once its zero, allow movement through baggage lane
 4. Make a python tool to read output of 2. to allow it to do analysis on various passengers to try and find root cause of slow downs and speed ups
 5. Far Off: Impliment a visualization for the passenger positions and allow for a cool animation
+6. Unit Tests:
+    1. stepping into plane sequencing
+    2. stopping at center aisle
+    3. stopping at seat row
+    4. baggage placing takes x amount of time based on speed
+    5. passing check (ie if someone isn't moving, make sure people behind them don't pass them)
+        a. check it at each section (3) and then at turning points for each
 */
 
 /*
