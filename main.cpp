@@ -1,6 +1,6 @@
 #include <iostream>
-#include "Sim.h"
-#include "Globals.h"
+#include "Sim\include\Sim.h"
+#include "Sim\include\Globals.h"
 
 
 int main() {

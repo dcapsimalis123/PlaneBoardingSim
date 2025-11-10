@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 4.1.0)
+project(debug VERSION 0.5) 
 
-project(debug)
-add_executable(debug main.cpp Sim.h Sim.cpp Person.h Person.cpp init_types.h init_types.cpp Globals.h)
-target_link_libraries(debug PRIVATE m)
+include_directories(Sim)
+add_subdirectory(Sim)
+add_executable(${PROJECT_NAME} main.cpp)
+target_link_libraries(${PROJECT_NAME} Sim)
