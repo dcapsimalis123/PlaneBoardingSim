@@ -3,12 +3,11 @@
 #include <fstream>
 #include <vector>
 #include "Sim.h"
-#include "init_types.h"
 #include "Globals.h"
 
 enum class blockType { initialBoard, centerAisle, seatedAisle };
 
-Sim::Sim(int passengerCount, Global::Globals* globalValues, int iplaneLength, int iplaneWidth, int iplaneMidPoint){
+Sim::Sim(int passengerCount, Global::Globals* globalValues, seat_pos (*seatingType)(int, Global::Globals*), int iplaneLength, int iplaneWidth, int iplaneMidPoint){
     int baggage_placement_speed = 1;
     globalValues->planeLength    = iplaneLength;  
     globalValues->planeMidPoint  = iplaneMidPoint;
@@ -17,7 +16,7 @@ Sim::Sim(int passengerCount, Global::Globals* globalValues, int iplaneLength, in
 
     // define a functions for setting the pattern of where people are sitting, call that after the foor loop to set the x and y positions correctly
     for (int i = 0; i < passengerCount; i++){
-        seat_pos tempSeatPos = fullColumn(i, 8, globalValues);
+        seat_pos tempSeatPos = seatingType(i, globalValues);
         passengerList.push_back(Person(i,tempSeatPos.xSeatPos,tempSeatPos.ySeatPos));
         lenPassengerList += 1;
         // position from the door to the right side of the plane
@@ -30,7 +29,7 @@ Sim::Sim(int passengerCount, Global::Globals* globalValues, int iplaneLength, in
     start_log_file();
 };
 
-Sim::Sim(int passengerCount, Global::Globals* globalValues, int iplaneLength, int iplaneWidth){
+Sim::Sim(int passengerCount, Global::Globals* globalValues,  seat_pos (*seatingType)(int, Global::Globals*), int iplaneLength, int iplaneWidth){
     int baggage_placement_speed = 1;
     globalValues->planeLength   = iplaneLength;
     globalValues->planeMidPoint = iplaneWidth;
@@ -39,7 +38,7 @@ Sim::Sim(int passengerCount, Global::Globals* globalValues, int iplaneLength, in
 
     // define a functions for setting the pattern of where people are sitting, call that after the foor loop to set the x and y positions correctly
     for (int i = 0; i < passengerCount; i++){
-        seat_pos tempSeatPos = fullColumn(i, 8, globalValues);
+        seat_pos tempSeatPos = seatingType(i, globalValues);
         passengerList.push_back(Person(i,tempSeatPos.xSeatPos,tempSeatPos.ySeatPos));
         lenPassengerList += 1;
         // position from the door to the right side of the plane

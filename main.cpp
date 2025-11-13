@@ -1,11 +1,12 @@
 #include <iostream>
 #include "Sim\include\Sim.h"
 #include "Sim\include\Globals.h"
+#include "Sim\include\init_types.h"
 
 
 int main() {
     Global::Globals globalValues;
-    Sim primeSim(2, &globalValues, 2, 2, 1);
+    Sim primeSim(2, &globalValues, &fullColumn, 2, 1);
     primeSim.display_seatPoses();
     
     primeSim.run_sim(10,2,0, &globalValues);
