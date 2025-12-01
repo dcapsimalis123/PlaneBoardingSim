@@ -99,7 +99,7 @@ int passed_point_check(Person* pPerson, float* remainMs, std::vector<int>& direc
 };
 
 
-float actually_move(Person* pPerson, float* remainMs, std::vector<int>& direction , int iterator, blockType stage, std::vector<Person>& passengerList, Global::Globals* globalValues){
+float position_change(Person* pPerson, float* remainMs, std::vector<int>& direction , int iterator, blockType stage, std::vector<Person>& passengerList, Global::Globals* globalValues){
     if (pPerson->seated){
         *remainMs = 0.0;
         return *remainMs;
@@ -123,12 +123,12 @@ int Sim::move(int person, Global::Globals* globalValues){
     if (pPerson->positionVector[1] == 0 && pPerson->positionVector[0] != globalValues->planeMidPoint){ // if in starting ailse and not at center of plane...
         direction[0] = 1;
         direction[1] = 0;
-        remainMs = actually_move(pPerson, pRemainMS, direction, person, blockType::initialBoard, passengerList, globalValues);
+        remainMs = position_change(pPerson, pRemainMS, direction, person, blockType::initialBoard, passengerList, globalValues);
     }
     if (pPerson->positionVector[0] == globalValues->planeMidPoint && pPerson->positionVector[1] != pPerson->ySeatPos && remainMs > 0){ // move down center && go to seat row
         direction[0] = 0;
         direction[1] = 1;
-        remainMs = actually_move(pPerson, pRemainMS, direction, person, blockType::centerAisle, passengerList, globalValues);
+        remainMs = position_change(pPerson, pRemainMS, direction, person, blockType::centerAisle, passengerList, globalValues);
     }
     if (pPerson->positionVector[1] == pPerson->ySeatPos && remainMs > 0){
         direction[0] = (pPerson->positionVector[0] > pPerson->xSeatPos) ? -1 : 1;
@@ -137,7 +137,7 @@ int Sim::move(int person, Global::Globals* globalValues){
             float* tempRemainMs = &remainMs;
             pPerson->baggage_placement_step(tempRemainMs);
         }
-        remainMs = actually_move(pPerson, pRemainMS, direction, person, blockType::seatedAisle, passengerList, globalValues);
+        remainMs = position_change(pPerson, pRemainMS, direction, person, blockType::seatedAisle, passengerList, globalValues);
     } 
     return 0;
 
