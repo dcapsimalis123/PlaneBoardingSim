@@ -68,7 +68,7 @@ int block_check(std::vector<Person>& passengerList, int person, blockType type_c
             break;
         case blockType::seatedAisle: // Check if anyone is in the way at the persons seat row
             float direction = std::signbit(globalValues->planeMidPoint - pPerson->xSeatPos) ? 1 : -1;         
-            if (pPerson->positionVector[0] * direction >= passengerList[person-1].positionVector[0] * direction && passengerList[person].positionVector[1] == passengerList[person-1].positionVector[1] && not passengerList[person-1].seated){ // check if anyone is infront of them for this movement
+            if (pPerson->positionVector[0] * direction >= passengerList[person-1].positionVector[0] * direction && passengerList[person].positionVector[1] == passengerList[person-1].positionVector[1] && !passengerList[person-1].seated){ // check if anyone is infront of them for this movement
                 pPerson->positionVector[0] = passengerList[person-1].positionVector[0] - 1 * direction; // 1 being the assumed diameter of the ideal circular humans
             }
             break;

@@ -1,6 +1,5 @@
 #include <iostream>
 #include <vector>
-#include <bits/stdc++.h>
 #include "Person.h"
 
 Person::Person(int tId, float txSeatPos, float tySeatPos){
