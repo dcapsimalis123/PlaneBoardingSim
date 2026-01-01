@@ -20,3 +20,15 @@ seat_pos spacedColumn(int person, Global::Globals* globalValues){
     output.xSeatPos += static_cast<int>(output.xSeatPos >= globalValues->planeMidPoint);
     return output;
 }
+
+seat_pos fullColumnReversed(int person, Global::Globals* globalValues){
+    seat_pos output = fullColumn(person, globalValues);
+    output.ySeatPos = globalValues->planeLength - output.ySeatPos; 
+    return output;
+}
+
+seat_pos spacedColumnReversed(int person, Global::Globals* globalValues){
+    seat_pos output = spacedColumn(person, globalValues);
+    output.ySeatPos = globalValues->planeLength-  output.ySeatPos;
+    return output;
+}
