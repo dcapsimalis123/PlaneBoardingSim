@@ -6,7 +6,7 @@
 
 void processInputs(int argc, char* argv[], Global::Globals* globalValues){
     std::cout << "Processing Arguments" << std::endl;
-    int globalValueNum = 4;
+    int globalValueNum = 5;
     int varHash[globalValueNum] = {0,0,0}; // width = 0, mid point = 1, length = 2, time step length = 3, boarding type = 4
     for (int i = 1; i < argc; ++i) { // start at 1: argv[0] is program name
         if (!argv[i] || argv[i][0] != '-' || !argv[i][1]) continue;
@@ -18,20 +18,24 @@ void processInputs(int argc, char* argv[], Global::Globals* globalValues){
         try {
             switch (opt) {
                 case 'w': // plane width
-                    globalValues->planeWidth = std::stoi(argv[++i]);
+                    globalValues->planeWidth     = std::stoi(argv[++i]);
                     varHash[0] = 1;
                     break;
                 case 'm': // mid aisle
-                    globalValues->planeMidPoint = std::stoi(argv[++i]);
+                    globalValues->planeMidPoint  = std::stoi(argv[++i]);
                     varHash[1] = 1;
                     break;
                 case 'l': // plane length
-                    globalValues->planeLength = std::stoi(argv[++i]);
+                    globalValues->planeLength    = std::stoi(argv[++i]);
                     varHash[2] = 1;
                     break;
                 case 't':
                     globalValues->timeStepLength = std::stoi(argv[++i]);
                     varHash[3] = 1;
+                    break;
+                case 's':
+                    globalValues->simMaxLength   = std::stoi(argv[++i]);
+                    varHash[4] = 1;
                     break;
                 default:
                     std::cout << "unknown option -" << opt << '\n';
@@ -58,6 +62,8 @@ void processInputs(int argc, char* argv[], Global::Globals* globalValues){
                 globalValues->planeLength = 8; //default
             case 3:
                 globalValues->timeStepLength = 1.0f; //default
+            case 4:
+                globalValues->simMaxLength = 15; //default
             default:
                 break;
             }

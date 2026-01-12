@@ -6,6 +6,7 @@ namespace Global{  // I think this counts as forward defining?
         int   planeMidPoint;  // Where the center aisle will be located right edge of 
         int   planeLength;
         float timeStepLength; // going to integrate a new version of methods for timing to allow for more interesting integration methods
+        int   simMaxLength;
     };
 }
 #endif

@@ -12,7 +12,7 @@ int main(int numOfArgs, char* argv[]) {
     Sim primeSim(2, &globalValues, &fullColumn);
     primeSim.display_seatPoses();
     
-    primeSim.run_sim(10,2,0, &globalValues);
+    primeSim.run_sim(globalValues.simMaxLength, 2, 0, &globalValues);
     primeSim.close_log_file();
     return 0;
 }
