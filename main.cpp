@@ -1,12 +1,15 @@
 #include <iostream>
 #include "Sim\include\Sim.h"
 #include "Sim\include\Globals.h"
-#include "Sim\include\init_types.h"
+#include "Sim\include\BoardingTypes.h"
+#include "Sim\include\InputArguments.h"
 
-
-int main() {
+int main(int numOfArgs, char* argv[]) {
     Global::Globals globalValues;
-    Sim primeSim(2, &globalValues, &fullColumn, 2, 1);
+    
+    processInputs(numOfArgs, argv, &globalValues);
+
+    Sim primeSim(2, &globalValues, &fullColumn);
     primeSim.display_seatPoses();
     
     primeSim.run_sim(10,2,0, &globalValues);

@@ -1,6 +1,6 @@
 #include <iostream>
 #include <cmath>
-#include "init_types.h"
+#include "BoardingTypes.h"
 #include "Globals.h"
 
 seat_pos fullColumn(int person, Global::Globals* globalValues){

@@ -7,12 +7,8 @@
 
 enum class blockType { initialBoard, centerAisle, seatedAisle };
 
-Sim::Sim(int passengerCount, Global::Globals* globalValues, seat_pos (*seatingType)(int, Global::Globals*), int iplaneLength, int iplaneWidth, int iplaneMidPoint){
+Sim::Sim(int passengerCount, Global::Globals* globalValues, seat_pos (*seatingType)(int, Global::Globals*)){
     int baggage_placement_speed = 1;
-    globalValues->planeLength    = iplaneLength;  
-    globalValues->planeMidPoint  = iplaneMidPoint;
-    globalValues->planeWidth     = iplaneWidth;
-    globalValues->timeStepLength = 1.0f;
 
     // define a functions for setting the pattern of where people are sitting, call that after the foor loop to set the x and y positions correctly
     for (int i = 0; i < passengerCount; i++){

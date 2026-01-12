@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <fstream>
-#include "init_types.h"
+#include "BoardingTypes.h"
 #include "Person.h"
 #include "Globals.h"
 
@@ -19,7 +19,7 @@ private:
     std::ofstream outputCSV;
 public:
     // Constructor
-    Sim(int passengerCount, Global::Globals* globalValues, seat_pos (*seatingType)(int, Global::Globals*), int planeLength, int planeWidth, int planeMidPoint);
+    Sim(int passengerCount, Global::Globals* globalValues, seat_pos (*seatingType)(int, Global::Globals*));
     Sim(int passengerCount, Global::Globals* globalValues, seat_pos (*seatingType)(int, Global::Globals*), int planeLength, int planeWidth);
 
     // Destructor
