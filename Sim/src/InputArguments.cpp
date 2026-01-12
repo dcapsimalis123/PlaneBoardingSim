@@ -58,12 +58,16 @@ void processInputs(int argc, char* argv[], Global::Globals* globalValues){
                 break;
             case 1:
                 globalValues->planeMidPoint = 3; //default
+                break;
             case 2:
                 globalValues->planeLength = 8; //default
+                break;
             case 3:
                 globalValues->timeStepLength = 1.0f; //default
+                break;
             case 4:
                 globalValues->simMaxLength = 15; //default
+                break;
             default:
                 break;
             }
