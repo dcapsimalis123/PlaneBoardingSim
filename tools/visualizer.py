@@ -55,8 +55,8 @@ def animation_block(passengerCount, data):
 def read_in_info(pathToFile):
     if not os.path.exists(pathToFile):        
         raise FileNotFoundError(f"Invalid path: {pathToFile}")
-    output = np.array(pd.read_csv(pathToFile))
-    return output[2:].astype(np.float64), output[0,-2].astype(np.int32)+1
+    output = np.array(pd.read_csv(pathToFile, header=None))
+    return output[2:].astype(np.float64), int(output[0,-2])+1
 
 main()
 
