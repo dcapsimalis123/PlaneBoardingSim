@@ -8,10 +8,12 @@ import os, sys
 # PSEUDOCODE
 # Read in file
 #   a) open file
-#   b) read as a n person x length dimensional array
-#   c) close file
-# assign colors to each person
-# plot vs time with gif creation tool in matplotlib
+#   b) read as a n person x length dimensional array and pull out passenger count
+# generate person objects per passenger
+# per each frame:
+#   1) associate each person with a class
+#   2) update each class with next time step
+# display
 fig, ax = plt.subplots()
 
 def main():
@@ -30,8 +32,6 @@ class Person:
 
     def update_position(self, x, y):
         self.patch.set(center=(x,y))
-
-
 
 def animation_block(passengerCount, data):
     """
