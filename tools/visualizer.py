@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as am
-import matplotlib
+import matplotlib.patches as pt
 from mpl_toolkits.axes_grid1.anchored_artists import AnchoredDrawingArea
 import pandas as pd
 import os, sys
@@ -24,7 +24,7 @@ class Person:
     Represents individual passenger with circle patch on the plot.
     """
     def __init__(self,radius=0.15,color='r',x=0,y=-1):
-        self.patch = matplotlib.patches.Circle((x, y), radius=radius)
+        self.patch = pt.patches.Circle((x, y), radius=radius)
         self.patch.set(color=color)
         self.patch.set_animated(True)
         ax.add_artist(self.patch)
