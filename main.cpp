@@ -31,6 +31,9 @@ TODO:
     a. change to adaptive step solver
     b. create an "end to sim" check if everyone is seated or if things are truly stuck. This would allow for the sim to understand if there hasn't been movement and save processing time.
 3. Far Off: Impliment a visualization for the passenger positions and allow for a cool animation
+    a. okay so I jumped the gun on this one =D
+    b. Need to clean the figure sizing so that it looks better
+    c. Need to add some sort of visualization showing seating and rows
 */
 
 /*
