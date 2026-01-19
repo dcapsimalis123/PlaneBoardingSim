@@ -17,7 +17,7 @@ Person::~Person(){}
 
 void Person::baggage_placement_step(float* remainMs){
     baggageCompletion += baggageSpeed * *remainMs;
-    if (baggageCompletion <= 1.0){
+    if (baggageCompletion >= 1.0){
         *remainMs = (baggageCompletion - 1.0)/baggageSpeed;
         *remainMs = (*remainMs > 0.0) ? *remainMs : 0.0;
     } else {
