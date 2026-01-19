@@ -1,9 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import matplotlib.animation as am
-import matplotlib.patches as pt
-from mpl_toolkits.axes_grid1.anchored_artists import AnchoredDrawingArea
-import pandas as pd
+from matplotlib.animation import FuncAnimation
+from matplotlib.patches import Circle
+from pandas import read_csv
 import os, sys
 
 # PSEUDOCODE
@@ -24,7 +23,7 @@ class Person:
     Represents individual passenger with circle patch on the plot.
     """
     def __init__(self,radius=0.15,color='r',x=0,y=-1):
-        self.patch = pt.patches.Circle((x, y), radius=radius)
+        self.patch = Circle((x, y), radius=radius)
         self.patch.set(color=color)
         self.patch.set_animated(True)
         ax.add_artist(self.patch)
@@ -49,7 +48,7 @@ def animation_block(passengerCount, data):
     ax.set_ylim(0,30)
 
     # Derived from data shape
-    step_count = data.shape[1]
+    step_count = data.shape[0]
 
     def init():
         # This is the default value setter for all patch objects, it is required for blitting
@@ -66,7 +65,7 @@ def animation_block(passengerCount, data):
 
     # executes animation loop, set interval to lower if we have more granular time steps, but that will likely be a system argument of the system
     # TODO: have sim automatic run of this script have that as a system argument based on the interval value of sim step speed.
-    anim = am.FuncAnimation(fig, update, interval = 1000, frames = step_count, init_func = init,  blit = True)
+    anim = FuncAnimation(fig, update, interval = 1000, frames = step_count, init_func = init,  blit = True)
     plt.show()
 
 def read_in_info(pathToFile):
@@ -79,7 +78,7 @@ def read_in_info(pathToFile):
     # TODO: Likely the to do information in update will be an expansion of these functions.
     if not os.path.exists(pathToFile):        
         raise FileNotFoundError(f"Invalid path: {pathToFile}")
-    output = np.array(pd.read_csv(pathToFile, header=None))
+    output = np.array(read_csv(pathToFile, header=None))
     return output[2:].astype(np.float64), int(output[0,-2])+1
 
 main()
