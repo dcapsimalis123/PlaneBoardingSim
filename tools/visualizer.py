@@ -16,7 +16,7 @@ import os, sys
 fig, ax = plt.subplots()
 
 def main():
-    output, passengerCount = read_in_info(pathToFile="../build/output.csv")
+    output, passengerCount = read_in_info(sys.argv[1])
     animation_block(passengerCount, output)
 
 class Person:
@@ -55,7 +55,7 @@ def animation_block(passengerCount, data):
 def read_in_info(pathToFile):
     # if not os.path.exists(pathToFile):        
     #     raise FileNotFoundError(f"Invalid path: {pathToFile}")
-    output = np.array(pd.read_csv("C:\\Users\\Donovan\\Desktop\\Coding\\plane_loading\\Main\\build\\output.csv"),)
+    output = np.array(pd.read_csv(pathToFile))
     return output[2:].astype(np.float64), output[0,-2].astype(np.int32)+1
 
 main()
