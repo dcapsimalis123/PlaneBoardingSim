@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 4.1.0)
-project(debug VERSION 0.5) 
+project(board VERSION 0.5) 
 
 include_directories(Sim)
 add_subdirectory(Sim)

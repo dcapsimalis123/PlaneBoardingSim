@@ -9,7 +9,8 @@ int main(int numOfArgs, char* argv[]) {
     
     processInputs(numOfArgs, argv, &globalValues);
 
-    Sim primeSim(2, &globalValues, &fullColumn);
+    
+    Sim primeSim(&globalValues, &fullColumnReversed);
     primeSim.display_seatPoses();
     
     primeSim.run_sim(globalValues.simMaxLength, 2, 0, &globalValues);

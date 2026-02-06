@@ -24,12 +24,12 @@ seat_pos spacedColumn(int person, Global::Globals* globalValues){
 
 seat_pos fullColumnReversed(int person, Global::Globals* globalValues){
     seat_pos output = fullColumn(person, globalValues);
-    output.ySeatPos = globalValues->planeLength - output.ySeatPos; 
+    output.ySeatPos = globalValues->planeLength - output.ySeatPos + 1; 
     return output;
 }
 
 seat_pos spacedColumnReversed(int person, Global::Globals* globalValues){
     seat_pos output = spacedColumn(person, globalValues);
-    output.ySeatPos = globalValues->planeLength-  output.ySeatPos;
+    output.ySeatPos = globalValues->planeLength-  output.ySeatPos + 1;
     return output;
 }

@@ -14,7 +14,9 @@ import os, sys
 #   1) associate each person with a class
 #   2) update each class with next time step
 # display
-fig, ax = plt.subplots()
+
+# Globals
+fig, ax = plt.subplots(figsize=(1,12))
 
 def main():
     output, passengerCount = read_in_info(sys.argv[1])
@@ -44,8 +46,8 @@ def animation_block(passengerCount, data):
     people = [ Person(color='r', x=-1, y=-1) for i in range(passengerCount) ]
 
     # Set to fit the size of the plane
-    ax.set_xlim(0,5)
-    ax.set_ylim(0,30)
+    ax.set_xlim(-1.5,6.5)
+    ax.set_ylim(-1, 30.5)
 
     # Derived from data shape
     step_count = data.shape[0]
@@ -66,6 +68,7 @@ def animation_block(passengerCount, data):
     # executes animation loop, set interval to lower if we have more granular time steps, but that will likely be a system argument of the system
     # TODO: have sim automatic run of this script have that as a system argument based on the interval value of sim step speed.
     anim = FuncAnimation(fig, update, interval = 1000, frames = step_count, init_func = init,  blit = True)
+    fig.subplots_adjust(top=1, bottom=0, right=1, left=0) # adjusts margins of the graph
     plt.show()
 
 def read_in_info(pathToFile):
@@ -78,8 +81,8 @@ def read_in_info(pathToFile):
     # TODO: Likely the to do information in update will be an expansion of these functions.
     if not os.path.exists(pathToFile):        
         raise FileNotFoundError(f"Invalid path: {pathToFile}")
-    output = np.array(read_csv(pathToFile, header=None))
-    return output[2:].astype(np.float64), int(output[0,-2])+1
+    output = np.array(read_csv(pathToFile,skiprows=0))
+    return output[2:].astype(np.float64), int(output[0,-3])+1
 
 main()
 

@@ -4,14 +4,15 @@
 #include <vector>
 #include "Sim.h"
 #include "Globals.h"
+#include <atomic>
 
 enum class blockType { initialBoard, centerAisle, seatedAisle };
 
-Sim::Sim(int passengerCount, Global::Globals* globalValues, seat_pos (*seatingType)(int, Global::Globals*)){
+Sim::Sim(Global::Globals* globalValues, seat_pos (*seatingType)(int, Global::Globals*)){
     int baggage_placement_speed = 1;
 
     // define a functions for setting the pattern of where people are sitting, call that after the foor loop to set the x and y positions correctly
-    for (int i = 0; i < passengerCount; i++){
+    for (int i = 0; i < globalValues->passengerCount; i++){
         seat_pos tempSeatPos = seatingType(i, globalValues);
         passengerList.push_back(Person(i,tempSeatPos.xSeatPos,tempSeatPos.ySeatPos));
         lenPassengerList += 1;
@@ -25,7 +26,7 @@ Sim::Sim(int passengerCount, Global::Globals* globalValues, seat_pos (*seatingTy
     start_log_file();
 };
 
-Sim::Sim(int passengerCount, Global::Globals* globalValues,  seat_pos (*seatingType)(int, Global::Globals*), int iplaneLength, int iplaneWidth){
+Sim::Sim(Global::Globals* globalValues,  seat_pos (*seatingType)(int, Global::Globals*), int iplaneLength, int iplaneWidth){
     int baggage_placement_speed = 1;
     globalValues->planeLength   = iplaneLength;
     globalValues->planeMidPoint = iplaneWidth;
@@ -33,7 +34,7 @@ Sim::Sim(int passengerCount, Global::Globals* globalValues,  seat_pos (*seatingT
 
 
     // define a functions for setting the pattern of where people are sitting, call that after the foor loop to set the x and y positions correctly
-    for (int i = 0; i < passengerCount; i++){
+    for (int i = 0; i < globalValues->passengerCount; i++){
         seat_pos tempSeatPos = seatingType(i, globalValues);
         passengerList.push_back(Person(i,tempSeatPos.xSeatPos,tempSeatPos.ySeatPos));
         lenPassengerList += 1;
@@ -116,12 +117,12 @@ int Sim::move(int person, Global::Globals* globalValues){
     std::vector<int> direction = {0, 0};
     float remainMs = pPerson->moveSpeed;
     float* pRemainMS = &remainMs;
-    if (pPerson->positionVector[1] == 0 && pPerson->positionVector[0] != globalValues->planeMidPoint){ // if in starting ailse and not at center of plane...
+    if (pPerson->positionVector[1] == 0 && pPerson->positionVector[0] < globalValues->planeMidPoint){ // if in starting ailse and not at center of plane...
         direction[0] = 1;
         direction[1] = 0;
         remainMs = position_change(pPerson, pRemainMS, direction, person, blockType::initialBoard, passengerList, globalValues);
     }
-    if (pPerson->positionVector[0] == globalValues->planeMidPoint && pPerson->positionVector[1] != pPerson->ySeatPos && remainMs > 0){ // move down center && go to seat row
+    if (pPerson->positionVector[0] == globalValues->planeMidPoint && pPerson->positionVector[1] < pPerson->ySeatPos && remainMs > 0){ // move down center && go to seat row
         direction[0] = 0;
         direction[1] = 1;
         remainMs = position_change(pPerson, pRemainMS, direction, person, blockType::centerAisle, passengerList, globalValues);
@@ -177,7 +178,11 @@ void Sim::display_seatPoses(){
 
 void Sim::start_log_file(){
     outputCSV.open("output.csv");
-    outputCSV << "First Line" << std::endl;
+    outputCSV << "First Line";
+    for (int i=0; i<lenPassengerList*2; i++){
+        outputCSV << ",";
+    }
+    outputCSV << std::endl;
     
     for (int i =0 ; i < lenPassengerList; i++ ){
         outputCSV << i << ", , ";

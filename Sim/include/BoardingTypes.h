@@ -17,5 +17,7 @@ struct seat_pos{
 };
 
 seat_pos fullColumn(int person,   Global::Globals* globalValues); 
-seat_pos spacedColumn(int person, Global::Globals* globalValues);
+seat_pos spacedColumn(int person, Global::Globals* globalValues); 
+seat_pos fullColumnReversed(int person,   Global::Globals* globalValues); 
+seat_pos spacedColumnReversed(int person, Global::Globals* globalValues); 
 #endif

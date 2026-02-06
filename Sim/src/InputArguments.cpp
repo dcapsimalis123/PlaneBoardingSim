@@ -2,11 +2,13 @@
 #include <string>
 #include <stdexcept>
 #include "InputArguments.h"
+#include "BoardingTypes.h"
+#include <functional>
 
 
 void processInputs(int argc, char* argv[], Global::Globals* globalValues){
     std::cout << "Processing Arguments" << std::endl;
-    int globalValueNum = 5;
+    int globalValueNum = 6;
     int varHash[globalValueNum] = {0,0,0}; // width = 0, mid point = 1, length = 2, time step length = 3, boarding type = 4
     for (int i = 1; i < argc; ++i) { // start at 1: argv[0] is program name
         if (!argv[i] || argv[i][0] != '-' || !argv[i][1]) continue;
@@ -29,13 +31,17 @@ void processInputs(int argc, char* argv[], Global::Globals* globalValues){
                     globalValues->planeLength    = std::stoi(argv[++i]);
                     varHash[2] = 1;
                     break;
-                case 't':
+                case 't': // changing the individual step timing
                     globalValues->timeStepLength = std::stoi(argv[++i]);
                     varHash[3] = 1;
                     break;
-                case 's':
+                case 's': // max length of sim
                     globalValues->simMaxLength   = std::stoi(argv[++i]);
                     varHash[4] = 1;
+                    break;
+                case 'p': // Number of passengers
+                    globalValues->passengerCount = std::stoi(argv[++i]);
+                    varHash[5] = 1;
                     break;
                 default:
                     std::cout << "unknown option -" << opt << '\n';
@@ -68,9 +74,12 @@ void processInputs(int argc, char* argv[], Global::Globals* globalValues){
             case 4:
                 globalValues->simMaxLength = 15; //default
                 break;
+            case 5:
+                globalValues->passengerCount = 10; //default
             default:
                 break;
             }
         }
     }
+    // TODO: impliment an enum with the various boarding methods and use that to compare against for the string we input for the various boarding method types.
 }
