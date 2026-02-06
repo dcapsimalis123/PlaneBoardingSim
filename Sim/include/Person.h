@@ -15,7 +15,7 @@ public:
     int   id;
     bool  seated;
 //Constructor
-    Person(int id, float txSeatPos, float tySeatPos);
+    Person(int id, float temporaryXSeatPos, float temporaryYSeatPos);
 
     //setter
     void baggage_placement_step(float* remainingTime);

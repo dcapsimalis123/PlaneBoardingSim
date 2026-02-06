@@ -74,21 +74,21 @@ int block_check(std::vector<Person>& passengerList, int person, blockType type_c
 };
 
 
-int passed_point_check(Person* pPerson, float* remainMs, std::vector<int>& direction, blockType stage, Global::Globals* globalValues){
+int passed_point_check(Person* pPerson, float* movementPoints, std::vector<int>& direction, blockType stage, Global::Globals* globalValues){
     switch (stage){
         case blockType::initialBoard:
-            if (pPerson->positionVector[0] <= globalValues->planeMidPoint ){*remainMs = 0.0; break;}
-            *remainMs =  pPerson->positionVector[0] - globalValues->planeMidPoint;
+            if (pPerson->positionVector[0] <= globalValues->planeMidPoint ){*movementPoints = 0.0; break;}
+            *movementPoints =  pPerson->positionVector[0] - globalValues->planeMidPoint;
             pPerson->positionVector[0] = globalValues->planeMidPoint;
             break;
         case blockType::centerAisle:
-            if (pPerson->positionVector[1] <= pPerson->ySeatPos ){*remainMs = 0.0; break;}
-            *remainMs = pPerson->positionVector[1] - pPerson->ySeatPos;
+            if (pPerson->positionVector[1] <= pPerson->ySeatPos ){*movementPoints = 0.0; break;}
+            *movementPoints = pPerson->positionVector[1] - pPerson->ySeatPos;
             pPerson->positionVector[1] = pPerson->ySeatPos;
             break;
         case blockType::seatedAisle:
-            if (pPerson->positionVector[0] * direction[0] <= pPerson->xSeatPos ){*remainMs = 0.0; return 0;}
-            *remainMs = pPerson->positionVector[0] - pPerson->xSeatPos;
+            if (pPerson->positionVector[0] * direction[0] <= pPerson->xSeatPos ){*movementPoints = 0.0; return 0;}
+            *movementPoints = pPerson->positionVector[0] - pPerson->xSeatPos;
             pPerson->positionVector[0] = pPerson->ySeatPos;
             break;
     }
@@ -96,45 +96,45 @@ int passed_point_check(Person* pPerson, float* remainMs, std::vector<int>& direc
 };
 
 
-float position_change(Person* pPerson, float* remainMs, std::vector<int>& direction , int iterator, blockType stage, std::vector<Person>& passengerList, Global::Globals* globalValues){
+float position_change(Person* pPerson, float* movementPoints, std::vector<int>& direction , int iterator, blockType stage, std::vector<Person>& passengerList, Global::Globals* globalValues){
     if (pPerson->seated){
-        *remainMs = 0.0;
-        return *remainMs;
+        *movementPoints = 0.0;
+        return *movementPoints;
     }
-    pPerson->positionVector[0] += direction[0] * *remainMs;
-    pPerson->positionVector[1] += direction[1] * *remainMs;
+    pPerson->positionVector[0] += direction[0] * *movementPoints;
+    pPerson->positionVector[1] += direction[1] * *movementPoints;
     if (iterator > 0){ // check for people in front of them
         block_check(passengerList, iterator, stage, globalValues);
     }
-    passed_point_check(pPerson, remainMs, direction, stage, globalValues);
+    passed_point_check(pPerson, movementPoints, direction, stage, globalValues);
     pPerson->seated_check();
-    return *remainMs;
+    return *movementPoints;
 };
 
 
 int Sim::move(int person, Global::Globals* globalValues){
     Person* pPerson = &passengerList[person];
     std::vector<int> direction = {0, 0};
-    float remainMs = pPerson->moveSpeed;
-    float* pRemainMS = &remainMs;
+    float movementPoints = pPerson->moveSpeed;
+    float* pmovementPoints = &movementPoints;
     if (pPerson->positionVector[1] == 0 && pPerson->positionVector[0] < globalValues->planeMidPoint){ // if in starting ailse and not at center of plane...
         direction[0] = 1;
         direction[1] = 0;
-        remainMs = position_change(pPerson, pRemainMS, direction, person, blockType::initialBoard, passengerList, globalValues);
+        movementPoints = position_change(pPerson, pmovementPoints, direction, person, blockType::initialBoard, passengerList, globalValues);
     }
-    if (pPerson->positionVector[0] == globalValues->planeMidPoint && pPerson->positionVector[1] < pPerson->ySeatPos && remainMs > 0){ // move down center && go to seat row
+    if (pPerson->positionVector[0] == globalValues->planeMidPoint && pPerson->positionVector[1] < pPerson->ySeatPos && movementPoints > 0){ // move down center && go to seat row
         direction[0] = 0;
         direction[1] = 1;
-        remainMs = position_change(pPerson, pRemainMS, direction, person, blockType::centerAisle, passengerList, globalValues);
+        movementPoints = position_change(pPerson, pmovementPoints, direction, person, blockType::centerAisle, passengerList, globalValues);
     }
-    if (pPerson->positionVector[1] == pPerson->ySeatPos && remainMs > 0){
+    if (pPerson->positionVector[1] == pPerson->ySeatPos && movementPoints > 0){
         direction[0] = (pPerson->positionVector[0] > pPerson->xSeatPos) ? -1 : 1;
         direction[1] = 0;
         if (pPerson->baggageCompletion < 1.0){
-            float* tempRemainMs = &remainMs;
-            pPerson->baggage_placement_step(tempRemainMs);
+            float* tempmovementPoints = &movementPoints;
+            pPerson->baggage_placement_step(tempmovementPoints);
         }
-        remainMs = position_change(pPerson, pRemainMS, direction, person, blockType::seatedAisle, passengerList, globalValues);
+        movementPoints = position_change(pPerson, pmovementPoints, direction, person, blockType::seatedAisle, passengerList, globalValues);
     } 
     return 0;
 

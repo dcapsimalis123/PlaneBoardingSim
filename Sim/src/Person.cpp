@@ -2,11 +2,11 @@
 #include <vector>
 #include "Person.h"
 
-Person::Person(int tId, float txSeatPos, float tySeatPos){
+Person::Person(int tId, float temporaryXSeatPos, float temporaryYSeatPos){
     moveSpeed = 1.0;
     positionVector = {-1.0, -1.0};
-    xSeatPos = txSeatPos;
-    ySeatPos = tySeatPos;
+    xSeatPos = temporaryXSeatPos;
+    ySeatPos = temporaryYSeatPos;
     baggageSpeed = 1.0;
     baggageCompletion = 0.0;
     id = tId;
@@ -15,12 +15,12 @@ Person::Person(int tId, float txSeatPos, float tySeatPos){
 
 Person::~Person(){}
 
-void Person::baggage_placement_step(float* remainMs){
-    baggageCompletion += baggageSpeed * *remainMs;
+void Person::baggage_placement_step(float* movementPoints){
+    baggageCompletion += baggageSpeed * *movementPoints;
     if (baggageCompletion >= 1.0){
-        *remainMs = (baggageCompletion - 1.0)/baggageSpeed;
-        *remainMs = (*remainMs > 0.0) ? *remainMs : 0.0;
+        *movementPoints = (baggageCompletion - 1.0)/baggageSpeed;
+        *movementPoints = (*movementPoints > 0.0) ? *movementPoints : 0.0;
     } else {
-        *remainMs = 0.0;
+        *movementPoints = 0.0;
     }
 }

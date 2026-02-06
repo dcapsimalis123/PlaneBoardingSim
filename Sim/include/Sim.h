@@ -29,8 +29,8 @@ public:
 
     // regular functions
     int  run_sim(int numSteps, int numPassengers, int initPassengerType, Global::Globals* globalValues);
-    int  display_id(int psngCount){return passengerList[psngCount].id;};
-    void display_pos(int psngCount){passengerList[psngCount].display_pos();};
+    int  display_id(int inputID){return passengerList[inputID].id;};
+    void display_pos(int inputID){passengerList[inputID].display_pos();};
     void display_seatPoses();
 
     void start_log_file();

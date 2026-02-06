@@ -1,8 +1,8 @@
 #include <iostream>
-#include "Sim\include\Sim.h"
-#include "Sim\include\Globals.h"
-#include "Sim\include\BoardingTypes.h"
-#include "Sim\include\InputArguments.h"
+#include "Sim.h"
+#include "Globals.h"
+#include "BoardingTypes.h"
+#include "InputArguments.h"
 
 int main(int numOfArgs, char* argv[]) {
     Global::Globals globalValues;
