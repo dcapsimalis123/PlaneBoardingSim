@@ -1,7 +1,17 @@
 cmake_minimum_required(VERSION 4.1.0)
-project(board VERSION 0.5) 
+project(PlaneLoading)
 
-include_directories(Sim)
-add_subdirectory(Sim)
-add_executable(${PROJECT_NAME} main.cpp)
-target_link_libraries(${PROJECT_NAME} Sim)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+include_directories(${CMAKE_SOURCE_DIR}/Sim/include)
+
+set(SOURCES
+    main.cpp
+    Sim/src/Person.cpp
+    Sim/src/BoardingTypes.cpp
+    Sim/src/InputArguments.cpp
+    Sim/src/Sim.cpp
+)
+
+add_executable(board_debug ${SOURCES})
