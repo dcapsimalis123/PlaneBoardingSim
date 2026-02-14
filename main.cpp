@@ -3,18 +3,36 @@
 #include "Globals.h"
 #include "BoardingTypes.h"
 #include "InputArguments.h"
+#include "error.h"
+#include <filesystem>
+
+using namespace std;
+namespace fs = std::filesystem;
 
 int main(int numOfArgs, char* argv[]) {
     Global::Globals globalValues;
-    
-    processInputs(numOfArgs, argv, &globalValues);
 
+    fs::path exePath;
+    fs::path configPath;
+
+    // find the directory of root directory and the config file. Later this will be a variable config file for differing scenarios
+    exePath = fs::absolute(argv[0]).parent_path().parent_path();
+    configPath = exePath  / "Scenarios" / "config.ini";
+
+    // set values, and fail out the sim if no setup file was found
+    if(processInputs(numOfArgs, argv, globalValues, exePath.string()) == -1){
+        exit(EXIT_FAILURE); 
+    };
     
+    // initialize Sim Master
     Sim primeSim(&globalValues, &fullColumnReversed);
-    primeSim.display_seatPoses();
+    primeSim.display_seatPoses(); // This is an early logging method, not for final product
     
+    // This starts and runs the sim as it was initialized
     primeSim.run_sim(globalValues.simMaxLength, 2, 0, &globalValues);
-    primeSim.close_log_file();
+    
+    // after sim has ended
+    primeSim.close_log_file(); 
     return 0;
 }
 

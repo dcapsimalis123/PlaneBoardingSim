@@ -3,4 +3,5 @@
 #include "BoardingTypes.h"
 #include <functional>
 
-void processInputs(int argc, char* argv[], Global::Globals* globalValues);
+int read_input_file(Global::Globals& globalValues, std::string pathToInput);
+int processInputs(int argc, char* argv[], Global::Globals& globalValues, std::string rootDirectory);
