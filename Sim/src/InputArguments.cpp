@@ -13,9 +13,9 @@ std::string find_data(std::string inputLine){
     // takes the line out of a config file and returns just the input value. This is processed into an int or other data type later.
     int pos = inputLine.find(':'); // update this with a method to string oout all spaces after the semi colon but for now just make it robust out to one whitespace
     while(true){
-        if(inputLine.substr(pos+1,1) == " "){ 
+        if(inputLine.substr(pos+1,1) == " "){ // skip over white spaces
             pos++;
-        }else{
+        } else {
             break;
         }
     }
@@ -55,12 +55,8 @@ int processInputs(int argc, char* argv[], Global::Globals& globalValues, std::st
     // first it sets all globals to the values in the ini file selected (using Default if none given), then it sets globals from the cmd line arguments.
     // TODO: Impliment feature for selecting ini and for defaulting
     std::cout << "Processing Arguments" << std::endl;
-    if(read_input_file(globalValues, scenarioFile) == -1){
-        return -1;
-    };
+    read_input_file(globalValues, scenarioFile);
 
-    int globalValueNum = 6;
-    int varHash[globalValueNum] = {0,0,0}; // width = 0, mid point = 1, length = 2, time step length = 3, boarding type = 4
     for (int i = 1; i < argc; ++i) { // start at 1: argv[0] is program name
         if (!argv[i] || argv[i][0] != '-' || !argv[i][1]) continue;
         char opt = argv[i][1];
@@ -72,27 +68,21 @@ int processInputs(int argc, char* argv[], Global::Globals& globalValues, std::st
             switch (opt) {
                 case 'w': // plane width
                     globalValues.planeWidth     = std::stoi(argv[++i]);
-                    varHash[0] = 1;
                     break;
                 case 'm': // mid aisle
                     globalValues.planeMidPoint  = std::stoi(argv[++i]);
-                    varHash[1] = 1;
                     break;
                 case 'l': // plane length
                     globalValues.planeLength    = std::stoi(argv[++i]);
-                    varHash[2] = 1;
                     break;
                 case 't': // changing the individual step timing
                     globalValues.timeStepLength = std::stoi(argv[++i]);
-                    varHash[3] = 1;
                     break;
                 case 's': // max length of sim
                     globalValues.simMaxLength   = std::stoi(argv[++i]);
-                    varHash[4] = 1;
                     break;
                 case 'p': // Number of passengers
                     globalValues.passengerCount = std::stoi(argv[++i]);
-                    varHash[5] = 1;
                     break;
                 default:
                     std::cout << "unknown option -" << opt << '\n';
@@ -106,5 +96,6 @@ int processInputs(int argc, char* argv[], Global::Globals& globalValues, std::st
             std::cout << "error parsing -" << opt << ": " << e.what() << '\n';
         }
     }
+    return 0;
     // TODO: reimpliment a different version of default values from outside config file, or move error of no config file to inside this function.
 }

@@ -9,6 +9,7 @@
 enum class blockType { initialBoard, centerAisle, seatedAisle };
 
 Sim::Sim(Global::Globals* globalValues, seat_pos (*seatingType)(int, Global::Globals*)){
+    // initialization overload from before there were global inputs
     int baggage_placement_speed = 1;
 
     // define a functions for setting the pattern of where people are sitting, call that after the foor loop to set the x and y positions correctly
@@ -27,6 +28,7 @@ Sim::Sim(Global::Globals* globalValues, seat_pos (*seatingType)(int, Global::Glo
 };
 
 Sim::Sim(Global::Globals* globalValues,  seat_pos (*seatingType)(int, Global::Globals*), int iplaneLength, int iplaneWidth){
+    // initialization overload from before there were global inputs
     int baggage_placement_speed = 1;
     globalValues->planeLength   = iplaneLength;
     globalValues->planeMidPoint = iplaneWidth;
@@ -50,7 +52,8 @@ Sim::Sim(Global::Globals* globalValues,  seat_pos (*seatingType)(int, Global::Gl
 
 
 int block_check(std::vector<Person>& passengerList, int person, blockType type_check, Global::Globals* globalValues){
-    if (person == 0){return 0;} // Prevent out-of-bounds
+    // this determines where in the plane the passenger is and thus what differences between the individual and those ahead of them might constitute a blockage that would inhibit movement
+    if (person == 0){return -1;} // Prevent out-of-bounds
     Person* pPerson = &passengerList[person];
     switch (type_check){
         case blockType::initialBoard: // Check if anyone is in the way at the start of the plane
@@ -75,6 +78,7 @@ int block_check(std::vector<Person>& passengerList, int person, blockType type_c
 
 
 int passed_point_check(Person* pPerson, float* movementPoints, std::vector<int>& direction, blockType stage, Global::Globals* globalValues){
+    // This function takes in a person pointer and the type of blocking determined elsewhere, and "bounce" the person back if they have overstepped
     switch (stage){
         case blockType::initialBoard:
             if (pPerson->positionVector[0] <= globalValues->planeMidPoint ){*movementPoints = 0.0; break;}
@@ -97,6 +101,8 @@ int passed_point_check(Person* pPerson, float* movementPoints, std::vector<int>&
 
 
 float position_change(Person* pPerson, float* movementPoints, std::vector<int>& direction , int iterator, blockType stage, std::vector<Person>& passengerList, Global::Globals* globalValues){
+    // this moves the person regardless of whats in front of them, then selects how it should determine if its moved too far, move them back if needed, then checks if the person is at their seat
+    // returns movement points incase there is extra movement left in a time cycle, which means they could also move through the rest of the timer.
     if (pPerson->seated){
         *movementPoints = 0.0;
         return *movementPoints;
@@ -113,6 +119,8 @@ float position_change(Person* pPerson, float* movementPoints, std::vector<int>& 
 
 
 int Sim::move(int person, Global::Globals* globalValues){
+    // highest part of the controling of the movement for the person objects. instantiates their movement for the time cycle, figures out how they should move given starting position,
+    // and then finally it does the actual movemnet for a given section. If there is spare movement, then it continues moving down the next section (ie if 2 movement points at a turn, it will move to the turn and then turn)
     Person* pPerson = &passengerList[person];
     std::vector<int> direction = {0, 0};
     float movementPoints = pPerson->moveSpeed;
@@ -143,6 +151,7 @@ int Sim::move(int person, Global::Globals* globalValues){
 
 
 int Sim::step(Global::Globals* globalValues){
+    // This is the largest controller of a time cycle step for the Sim
     int personIterator{0};
     while(personIterator < passengersBoarding){
         if (passengerList[personIterator].positionVector[0] != -1 && passengerList[personIterator].seated != true) { 
@@ -177,7 +186,7 @@ void Sim::display_seatPoses(){
 
 
 void Sim::start_log_file(){
-    outputCSV.open("output.csv");
+    outputCSV.open("Outputs/output.csv");
     outputCSV << "First Line";
     for (int i=0; i<lenPassengerList*2; i++){
         outputCSV << ",";

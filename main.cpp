@@ -7,23 +7,21 @@
 #include <filesystem>
 
 using namespace std;
-namespace fs = std::filesystem;
+using namespace std::filesystem;
 
 int main(int numOfArgs, char* argv[]) {
     Global::Globals globalValues;
 
-    fs::path exePath;
-    fs::path configPath;
+    path exePath;
+    path scenarioPath;
 
     // find the directory of root directory and the config file. Later this will be a variable config file for differing scenarios
-    exePath = fs::absolute(argv[0]).parent_path().parent_path();
-    configPath = exePath  / "Scenarios" / "config.ini";
+    exePath = absolute(argv[0]).parent_path();
+    scenarioPath = exePath  / "Scenarios" / "config.ini";
 
     // set values, and fail out the sim if no setup file was found
-    if(processInputs(numOfArgs, argv, globalValues, exePath.string()) == -1){
-        exit(EXIT_FAILURE); 
-    };
-    
+    processInputs(numOfArgs, argv, globalValues, scenarioPath.string());
+
     // initialize Sim Master
     Sim primeSim(&globalValues, &fullColumnReversed);
     primeSim.display_seatPoses(); // This is an early logging method, not for final product
@@ -33,8 +31,8 @@ int main(int numOfArgs, char* argv[]) {
     
     // after sim has ended
     primeSim.close_log_file(); 
-    return 0;
-}
+        return 0;
+    }
 
 /*
 TODO:
@@ -61,4 +59,5 @@ set scenario type
 init Main Sim class
 set sim length
 step through
+close out of sim and log
 */
