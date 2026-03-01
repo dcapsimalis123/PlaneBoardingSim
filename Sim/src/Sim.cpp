@@ -8,6 +8,7 @@
 
 enum class blockType { initialBoard, centerAisle, seatedAisle };
 
+
 Sim::Sim(Global::Globals* globalValues, seat_pos (*seatingType)(int, Global::Globals*)){
     // initialization overload from before there were global inputs
     int baggage_placement_speed = 1;
@@ -26,6 +27,7 @@ Sim::Sim(Global::Globals* globalValues, seat_pos (*seatingType)(int, Global::Glo
     }
     start_log_file();
 };
+
 
 Sim::Sim(Global::Globals* globalValues,  seat_pos (*seatingType)(int, Global::Globals*), int iplaneLength, int iplaneWidth){
     // initialization overload from before there were global inputs
@@ -178,6 +180,7 @@ int Sim::step(Global::Globals* globalValues){
     return 0;
 };
 
+
 void Sim::display_seatPoses(){
     for (int i = 0; i < lenPassengerList; i++){
         passengerList[i].display_seatPos();
@@ -203,6 +206,7 @@ void Sim::start_log_file(){
     outputCSV << std::endl;
 }
 
+
 void Sim::update_log_file(){
     for (int i =0 ; i < lenPassengerList; i++ ){
         outputCSV << passengerList[i].positionVector[0] << "," << passengerList[i].positionVector[1] << ",";
@@ -210,9 +214,11 @@ void Sim::update_log_file(){
     outputCSV << std::endl;
 }
 
+
 void Sim::close_log_file(){
     outputCSV.close();
 }
+
 
 int Sim::run_sim(int numSteps, int numPassengers, int initPassengerType, Global::Globals* globalValues){
     for (int i{0}; i < numSteps; i++){
@@ -222,6 +228,7 @@ int Sim::run_sim(int numSteps, int numPassengers, int initPassengerType, Global:
     }
     return 0;
 };
+
 
 void Sim::display_time(int iteratorStep){
     std::cout << "Time: " << iteratorStep << std::endl;

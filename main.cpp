@@ -14,6 +14,7 @@ int main(int numOfArgs, char* argv[]) {
 
     path exePath;
     path scenarioPath;
+    if(!exists("Outputs")){create_directories("Outputs");} // ensure Outputs path exists
 
     // find the directory of root directory and the config file. Later this will be a variable config file for differing scenarios
     exePath = absolute(argv[0]).parent_path();
@@ -38,12 +39,7 @@ int main(int numOfArgs, char* argv[]) {
 TODO:
 0. Need to swap the check to check for all people in front while not overloading the sim, with better organized boarding, current is works (thus current implimentation), but for chaotic seating orders, this needs to be addressed.
 1. Unit Tests:
-    a. stepping into plane sequencing
-    b. stopping at center aisle
-    c. stopping at seat row
-    d. baggage placing takes x amount of time based on speed
-    e. passing check (ie if someone isn't moving, make sure people behind them don't pass them)
-    f. check it at each section (3) and then at turning points for each
+    a. look at the UnitTests file for list
 2. timing changes
     a. change to adaptive step solver
     b. create an "end to sim" check if everyone is seated or if things are truly stuck. This would allow for the sim to understand if there hasn't been movement and save processing time.

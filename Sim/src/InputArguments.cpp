@@ -88,12 +88,12 @@ int processInputs(int argc, char* argv[], Global::Globals& globalValues, std::st
                     std::cout << "unknown option -" << opt << '\n';
                     break;
             }
-        } catch (const std::invalid_argument& e) {
+        } catch (const std::invalid_argument& errorCatch) {
             std::cout << "invalid value for -" << opt << "; keeping default\n";
-        } catch (const std::out_of_range& e) {
+        } catch (const std::out_of_range& errorCatch) {
             std::cout << "value out of range for -" << opt << "; keeping default\n";
-        } catch (const std::exception& e) {
-            std::cout << "error parsing -" << opt << ": " << e.what() << '\n';
+        } catch (const std::exception& errorCatch) {
+            std::cout << "error parsing -" << opt << ": " << errorCatch.what() << '\n';
         }
     }
     return 0;
