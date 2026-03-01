@@ -13,19 +13,19 @@ def read_in_data(csvName, person):
     tempCSV = np.array(pd.read_csv(csvName,skiprows=1))
     return tempCSV[2:,person*2:person*2+2].astype(np.float64)
 
-def plot_data(data):
+def plot_data(data,color=[1,0,0]):
     """ This function takes data output from read in and plots the
     simplest form of output from it"""
-    plt.plot(data[:,1],data[:,0])
+    plt.plot(data[:,1],data[:,0],color)
 
-def read_in_individual(person):
+def read_in_individual(person,color):
     """"This function will agregate for each person for ease of iteration"""
-    data = read_in_data('tools\output.csv',person)
-    plot_data(data)
+    data = read_in_data(sys.argv[1],person)
+    plot_data(data,color)
 
 def main():
     for i in range(48):
-        read_in_individual(i)
+        read_in_individual(i,[i/48,0,(1-i/48)])
     plt.show()
 
 
