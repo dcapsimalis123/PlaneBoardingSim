@@ -43,7 +43,7 @@ def animation_block(passengerCount, data):
         passengerCount: number of passengers
         data: raw unassociated data from csv
     """
-    people = [ Person(color='r', x=-1, y=-1) for i in range(passengerCount) ]
+    people = [ Person(color=[(i/passengerCount),0,(1-i/passengerCount)], x=-1, y=-1) for i in range(passengerCount) ]
 
     # Set to fit the size of the plane
     ax.set_xlim(-1.5,6.5)
