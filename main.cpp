@@ -25,7 +25,7 @@ int main(int numOfArgs, char* argv[]) {
 
     // initialize Sim Master
     Sim primeSim(&globalValues, &fullColumnReversed);
-    primeSim.display_seatPoses(); // This is an early logging method, not for final product
+    // primeSim.display_seatPoses(); // This is an early logging method, not for final product
     
     // This starts and runs the sim as it was initialized
     primeSim.run_sim(globalValues.simMaxLength, 2, 0, &globalValues);

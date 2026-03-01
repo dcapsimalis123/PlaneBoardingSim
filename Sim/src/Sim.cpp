@@ -5,6 +5,8 @@
 #include "Sim.h"
 #include "Globals.h"
 #include <atomic>
+#include <filesystem>
+#include <format>
 
 enum class blockType { initialBoard, centerAisle, seatedAisle };
 
@@ -189,7 +191,17 @@ void Sim::display_seatPoses(){
 
 
 void Sim::start_log_file(){
-    outputCSV.open("Outputs/output.csv");
+    int next_index{-1};
+    for (const auto& entry : std::filesystem::directory_iterator("Outputs")) {
+        std::string fileNameTemp =  entry.path().filename().string();
+        int extentionIndex = fileNameTemp.find_first_of('.');
+        int startingIndex  = fileNameTemp.find_first_of('_');
+        if (startingIndex == -1){
+            continue;
+        }
+        next_index = std::stoi(fileNameTemp.substr(startingIndex+1,extentionIndex-startingIndex-1));
+    }
+    outputCSV.open(std::format("Outputs/output_{}.csv",next_index+1));
     outputCSV << "First Line";
     for (int i=0; i<lenPassengerList*2; i++){
         outputCSV << ",";
@@ -222,7 +234,7 @@ void Sim::close_log_file(){
 
 int Sim::run_sim(int numSteps, int numPassengers, int initPassengerType, Global::Globals* globalValues){
     for (int i{0}; i < numSteps; i++){
-        if (debugMode){ display_time(i); }
+        // if (debugMode){ display_time(i); }
         step(globalValues);
         update_log_file();
     }
