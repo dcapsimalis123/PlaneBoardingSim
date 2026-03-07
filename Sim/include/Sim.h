@@ -4,6 +4,7 @@
 #include "BoardingTypes.h"
 #include "Person.h"
 #include "Globals.h"
+#include <functional>
 
 
 
@@ -19,8 +20,8 @@ private:
     std::ofstream outputCSV;
 public:
     // Constructor
-    Sim(Global::Globals* globalValues, seat_pos (*seatingType)(int, Global::Globals*));
-    Sim(Global::Globals* globalValues, seat_pos (*seatingType)(int, Global::Globals*), int planeLength, int planeWidth);
+    Sim(Global::Globals* globalValues, std::function<seat_pos(int, Global::Globals*)>);
+    Sim(Global::Globals* globalValues, std::function<seat_pos(int, Global::Globals*)>, int planeLength, int planeWidth);
 
     // Destructor
 

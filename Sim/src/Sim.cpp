@@ -11,7 +11,7 @@
 enum class blockType { initialBoard, centerAisle, seatedAisle };
 
 
-Sim::Sim(Global::Globals* globalValues, seat_pos (*seatingType)(int, Global::Globals*)){
+Sim::Sim(Global::Globals* globalValues, std::function<seat_pos(int, Global::Globals*)> seatingType){
     // initialization overload from before there were global inputs
     int baggage_placement_speed = 1;
 
@@ -31,7 +31,7 @@ Sim::Sim(Global::Globals* globalValues, seat_pos (*seatingType)(int, Global::Glo
 };
 
 
-Sim::Sim(Global::Globals* globalValues,  seat_pos (*seatingType)(int, Global::Globals*), int iplaneLength, int iplaneWidth){
+Sim::Sim(Global::Globals* globalValues, std::function<seat_pos(int, Global::Globals*)> seatingType, int iplaneLength, int iplaneWidth){
     // initialization overload from before there were global inputs
     int baggage_placement_speed = 1;
     globalValues->planeLength   = iplaneLength;

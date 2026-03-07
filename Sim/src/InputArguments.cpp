@@ -50,12 +50,32 @@ int read_input_file(Global::Globals& globalValues, std::string pathToInput){
     return 0;
 }
 
-int processInputs(int argc, char* argv[], Global::Globals& globalValues, std::string scenarioFile){
+
+int set_return_function(std::string inputString, std::function<seat_pos(int, Global::Globals*)>* returnFunction){
+    // TODO: impliment string check against type list of boarding types
+    if (inputString.compare("fullColumnReversed") == 0){
+        *returnFunction = &fullColumnReversed;
+    } else if (inputString.compare("fullColumn")){
+        *returnFunction = &fullColumn;
+    } else if (inputString.compare("spacedColumnReversed")){
+        *returnFunction = &spacedColumnReversed;
+    } else if (inputString.compare("spacedColumn")){
+        *returnFunction = &spacedColumn;
+    } else {
+        std::cout << inputString << " is not a valid testing method. Check spaces and capitals." << std::endl;
+        return -1;
+    }
+    return 0;
+}
+
+std::function<seat_pos(int, Global::Globals*)>& processInputs(int argc, char* argv[], Global::Globals& globalValues, std::string scenarioFile){
     // This file takes sets global variables according to inputs given from user.
     // first it sets all globals to the values in the ini file selected (using Default if none given), then it sets globals from the cmd line arguments.
     // TODO: Impliment feature for selecting ini and for defaulting
     std::cout << "Processing Arguments" << std::endl;
     read_input_file(globalValues, scenarioFile);
+    static std::function<seat_pos(int, Global::Globals*)> returnFunction = &fullColumnReversed; // For now this is default
+                                                                                                // TODO: reimpliment the default into the ini files.
 
     for (int i = 1; i < argc; ++i) { // start at 1: argv[0] is program name
         if (!argv[i] || argv[i][0] != '-' || !argv[i][1]) continue;
@@ -84,6 +104,9 @@ int processInputs(int argc, char* argv[], Global::Globals& globalValues, std::st
                 case 'p': // Number of passengers
                     globalValues.passengerCount = std::stoi(argv[++i]);
                     break;
+                case 'i': // set boarding order type
+                    set_return_function(argv[++i], &returnFunction);
+                    break;
                 default:
                     std::cout << "unknown option -" << opt << '\n';
                     break;
@@ -96,6 +119,7 @@ int processInputs(int argc, char* argv[], Global::Globals& globalValues, std::st
             std::cout << "error parsing -" << opt << ": " << errorCatch.what() << '\n';
         }
     }
-    return 0;
+
+    return  returnFunction;
     // TODO: reimpliment a different version of default values from outside config file, or move error of no config file to inside this function.
 }
